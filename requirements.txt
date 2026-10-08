@@ -1,0 +1,2 @@
+# Shared direct runtime dependency. Update through a PR after team validation.
+streamlit==1.65.0
