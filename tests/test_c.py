@@ -52,3 +52,17 @@ def test_history_in_prompt():
     h = {"previous_plan": "x", "completion": "none"}
     msg = llm.build_user_message(NECK, h, retrieval.retrieve_guidance(NECK)["sources"])
     assert "completion" in msg and "K04" in msg
+
+def test_reference_only_never_returned():
+    r = retrieval.retrieve_guidance({"discomfort_area": "neck", "discomfort_score": 9, "screen_hours": 9, "fatigue_score": 9})
+    assert all(s["category"] != "reference_only" for s in r["sources"])
+
+def test_screen_and_breaks_affect_retrieval():
+    r = retrieval.retrieve_guidance({"screen_hours": 9, "break_completion": "none", "workstation_habits": "laptop on desk"})
+    ids = [s["id"] for s in r["sources"]]
+    assert "K06" in ids and "K04" in ids
+
+def test_offline_bilingual(monkeypatch):
+    monkeypatch.setenv("WORKWELL_OFFLINE", "1")
+    src = retrieval.retrieve_guidance(NECK)["sources"]
+    assert llm.generate_plan(NECK, {}, src)["plan"]["items"][0]["advice_zh"]

@@ -66,6 +66,19 @@ def build_query_tags(inp):
     except (TypeError, ValueError):
         pass
     try:
+        if float(inp.get("screen_hours") or 0) >= 6:
+            for t in ("eyes", "eye_strain", "screen"):
+                add(t, 2)
+    except (TypeError, ValueError):
+        pass
+    habits = str(inp.get("workstation_habits") or "").lower()
+    for word, tag in (("laptop", "monitor"), ("monitor", "monitor"), ("chair", "chair"),
+                      ("keyboard", "keyboard"), ("mouse", "mouse"), ("glare", "screen")):
+        if word in habits:
+            add(tag, 2)
+    if str(inp.get("break_completion") or "").lower() in ("none", "low", "partial", "poor"):
+        add("micro_break", 2)
+    try:
         if float(inp.get("fatigue_score") or 0) >= 5:
             for t in ("fatigue", "recovery"):
                 add(t, 2)
@@ -84,6 +97,8 @@ def retrieve_guidance(inp, max_results=MAX_SOURCES, knowledge=None):
     query = build_query_tags(inp)
     scored = []
     for item in items:
+        if item.get("category") == "reference_only":
+            continue
         score = sum(query.get(t, 0) for t in item.get("tags", []))
         if score > 0:
             scored.append((score, item["id"], item))
