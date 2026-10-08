@@ -1,1 +1,219 @@
-[]
+[
+ {
+  "id": "KB-01",
+  "title": "Break up prolonged sitting",
+  "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+  "source_name": "WHO - Physical activity fact sheet",
+  "category": "break",
+  "tags": [
+   "sedentary",
+   "sitting",
+   "movement",
+   "micro_break",
+   "fatigue"
+  ]
+ },
+ {
+  "id": "KB-02",
+  "title": "Short walking breaks",
+  "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+  "source_name": "WHO - Physical activity fact sheet",
+  "category": "break",
+  "tags": [
+   "sedentary",
+   "walking",
+   "movement",
+   "fatigue",
+   "stress"
+  ]
+ },
+ {
+  "id": "KB-03",
+  "title": "Seated posture basics",
+  "content": "Sit with feet supported on the floor or a footrest, knees roughly level with the hips, and the lower back supported by the chair backrest. Avoid sitting in the same fixed posture for a long time; small posture changes help.",
+  "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+  "source_name": "CCOHS - Office ergonomics",
+  "category": "workstation",
+  "tags": [
+   "posture",
+   "lower_back",
+   "back",
+   "sitting",
+   "chair"
+  ]
+ },
+ {
+  "id": "KB-04",
+  "title": "Monitor height and distance",
+  "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+  "url": "https://www.osha.gov/etools/computer-workstations",
+  "source_name": "OSHA - Computer workstations eTool",
+  "category": "workstation",
+  "tags": [
+   "neck",
+   "shoulder",
+   "posture",
+   "monitor",
+   "workstation",
+   "eyes"
+  ]
+ },
+ {
+  "id": "KB-05",
+  "title": "Keyboard and mouse position",
+  "content": "Keep the keyboard and mouse close to the body so the elbows stay near the sides and bent at about 90 degrees, with wrists in a neutral, straight position rather than bent up or sideways.",
+  "url": "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/office-ergonomics/art-20046169",
+  "source_name": "Mayo Clinic - Office ergonomics",
+  "category": "workstation",
+  "tags": [
+   "wrist",
+   "hand",
+   "shoulder",
+   "workstation",
+   "keyboard",
+   "mouse",
+   "arm"
+  ]
+ },
+ {
+  "id": "KB-06",
+  "title": "20-20-20 rule for eye strain",
+  "content": "To reduce digital eye strain, every 20 minutes look at something about 20 feet (6 metres) away for at least 20 seconds. Blinking fully and adjusting screen brightness to match the room can also help.",
+  "url": "https://www.aoa.org/healthy-eyes/eye-and-vision-conditions/computer-vision-syndrome",
+  "source_name": "American Optometric Association - Computer vision syndrome",
+  "category": "screen_rest",
+  "tags": [
+   "eyes",
+   "eye_strain",
+   "screen",
+   "headache",
+   "fatigue"
+  ]
+ },
+ {
+  "id": "KB-07",
+  "title": "Gentle neck and shoulder stretches",
+  "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+  "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+  "source_name": "CCOHS - Office ergonomics",
+  "category": "break",
+  "tags": [
+   "neck",
+   "shoulder",
+   "stretching",
+   "stiffness",
+   "upper_back"
+  ]
+ },
+ {
+  "id": "KB-08",
+  "title": "Staying active with lower back discomfort",
+  "content": "For mild back pain, staying active and continuing normal activities as far as possible is usually better than prolonged rest. Gentle movement and stretching can help; seek medical advice if pain is severe or does not improve.",
+  "url": "https://www.nhs.uk/conditions/back-pain/",
+  "source_name": "NHS - Back pain",
+  "category": "break",
+  "tags": [
+   "lower_back",
+   "back",
+   "stretching",
+   "movement",
+   "stiffness"
+  ]
+ },
+ {
+  "id": "KB-09",
+  "title": "Rest and stretch hands and wrists",
+  "content": "During long periods of typing or mouse use, take short pauses and gently open and stretch the fingers and wrists. Avoid resting the wrists on hard edges while typing.",
+  "url": "https://www.nhs.uk/conditions/carpal-tunnel-syndrome/",
+  "source_name": "NHS - Carpal tunnel syndrome",
+  "category": "break",
+  "tags": [
+   "wrist",
+   "hand",
+   "typing",
+   "stretching",
+   "micro_break",
+   "arm"
+  ]
+ },
+ {
+  "id": "KB-10",
+  "title": "Microbreaks reduce strain",
+  "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+  "url": "https://www.cdc.gov/niosh/ergonomics/",
+  "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+  "category": "break",
+  "tags": [
+   "micro_break",
+   "fatigue",
+   "sedentary",
+   "neck",
+   "shoulder",
+   "wrist",
+   "eyes"
+  ]
+ },
+ {
+  "id": "KB-11",
+  "title": "Breathing exercise for stress and tension",
+  "content": "A simple breathing exercise - breathing in slowly through the nose and out through the mouth for a few minutes while sitting comfortably - can help people feel calmer when stressed or tense.",
+  "url": "https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/",
+  "source_name": "NHS - Breathing exercises for stress",
+  "category": "fatigue_management",
+  "tags": [
+   "stress",
+   "relaxation",
+   "breathing",
+   "fatigue",
+   "tension"
+  ]
+ },
+ {
+  "id": "KB-12",
+  "title": "Tiredness and daily habits",
+  "content": "Everyday tiredness is often helped by regular sleep times, some daily physical activity, drinking enough water and a manageable workload. Persistent unexplained tiredness should be discussed with a doctor.",
+  "url": "https://www.nhs.uk/conditions/tiredness-and-fatigue/",
+  "source_name": "NHS - Tiredness and fatigue",
+  "category": "fatigue_management",
+  "tags": [
+   "fatigue",
+   "sleep",
+   "recovery",
+   "hydration",
+   "walking"
+  ]
+ },
+ {
+  "id": "KB-13",
+  "title": "Screen time, brightness and glare",
+  "content": "Reduce glare by positioning the screen at right angles to windows and adjusting brightness and text size so the screen is comfortable to read. Long uninterrupted screen use is a common cause of tired, dry or strained eyes.",
+  "url": "https://www.osha.gov/etools/computer-workstations",
+  "source_name": "OSHA - Computer workstations eTool",
+  "category": "screen_rest",
+  "tags": [
+   "eyes",
+   "eye_strain",
+   "screen",
+   "headache",
+   "workstation"
+  ]
+ },
+ {
+  "id": "KB-14",
+  "title": "When discomfort needs professional review (reference only)",
+  "content": "Numbness or tingling, pain that spreads down an arm or leg, severe headache, or pain that keeps getting worse or does not improve should be assessed by a doctor or occupational health professional rather than managed with routine self-care tips.",
+  "url": "https://www.nhs.uk/conditions/back-pain/",
+  "source_name": "NHS - Back pain (when to get help)",
+  "category": "reference_only",
+  "tags": [
+   "warning",
+   "numbness",
+   "radiating",
+   "pain",
+   "headache",
+   "persistent"
+  ]
+ }
+]

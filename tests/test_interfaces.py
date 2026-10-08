@@ -16,7 +16,6 @@ class InterfaceTests(unittest.TestCase):
     def test_placeholder_modules_are_explicit_errors(self):
         results = [workflow.start_workflow({}), workflow.submit_decision({}),
                    safety.validate_input({}), safety.check_safety({}, []), safety.validate_plan({}, []),
-                   retrieval.retrieve_guidance({}), llm.generate_plan({}, {}, []),
                    storage.load_history('demo-user'), storage.load_logs('demo-user'),
                    storage.save_record({}), storage.append_log({}),
                    storage.save_feedback('demo-user', 'plan-1', {}), feedback.build_feedback_context({}, [])]
