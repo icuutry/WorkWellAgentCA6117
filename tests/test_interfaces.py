@@ -13,10 +13,8 @@ import feedback
 
 
 class InterfaceTests(unittest.TestCase):
-    def test_placeholder_modules_are_explicit_errors(self):
-        results = [workflow.start_workflow({}), workflow.submit_decision({}),
-                   safety.validate_input({}), safety.check_safety({}, []), safety.validate_plan({}, []),
-                   retrieval.retrieve_guidance({}), llm.generate_plan({}, {}, []),
+    def test_remaining_placeholder_modules_are_explicit_errors(self):
+        results = [retrieval.retrieve_guidance({}), llm.generate_plan({}, {}, []),
                    storage.load_history('demo-user'), storage.load_logs('demo-user'),
                    storage.save_record({}), storage.append_log({}),
                    storage.save_feedback('demo-user', 'plan-1', {}), feedback.build_feedback_context({}, [])]
@@ -24,6 +22,36 @@ class InterfaceTests(unittest.TestCase):
             check_result(result)
             self.assertEqual(result['status'], 'error')
             self.assertEqual(result['error_code'], 'NOT_IMPLEMENTED')
+
+    def test_input_validation_reports_invalid_input(self):
+        result = check_result(safety.validate_input({}))
+        self.assertEqual(result['status'], 'error')
+        self.assertEqual(result['error_code'], 'INVALID_INPUT')
+        self.assertEqual(result['data'], {})
+
+    def test_safety_check_reports_invalid_input(self):
+        result = check_result(safety.check_safety({}, []))
+        self.assertEqual(result['status'], 'error')
+        self.assertEqual(result['error_code'], 'INVALID_INPUT')
+        self.assertEqual(result['data'], {})
+
+    def test_plan_validation_reports_invalid_output(self):
+        result = check_result(safety.validate_plan({}, []))
+        self.assertEqual(result['status'], 'error')
+        self.assertEqual(result['error_code'], 'INVALID_MODEL_OUTPUT')
+        self.assertEqual(result['data'], {})
+
+    def test_workflow_input_validation_is_real(self):
+        result = check_result(workflow.start_workflow({}))
+        self.assertEqual(result['status'], 'error')
+        self.assertEqual(result['error_code'], 'INVALID_INPUT')
+        self.assertEqual(result['data'], {})
+
+    def test_decision_validation_is_real(self):
+        result = check_result(workflow.submit_decision({}))
+        self.assertEqual(result['status'], 'error')
+        self.assertEqual(result['error_code'], 'INVALID_INPUT')
+        self.assertEqual(result['data'], {})
 
     def test_errors_need_codes(self):
         with self.assertRaises(ValueError): make_result('error')
@@ -43,7 +71,7 @@ class InterfaceTests(unittest.TestCase):
             self.assertEqual(backend.load_logs('demo-user'), [])
             self.assertEqual(backend.submit_decision({})['status'], 'saved')
 
-    def test_unimplemented_real_workflow_is_not_a_mock_plan(self):
+    def test_invalid_real_workflow_input_is_not_a_mock_plan(self):
         backend = app.TeamBackend()
         result = backend.start_workflow({})
         app.validate_result(result)
