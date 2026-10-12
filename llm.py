@@ -40,6 +40,25 @@ OUTPUT: return ONLY one JSON object, no markdown:
 {{"actions": [{{"category": "...", "advice": "...", "reason": "...", "source_ids": ["KB-01"], "advice_zh": "...", "reason_zh": "..."}}]}}"""
 
 
+def load_env_file(path=None):
+    """Load KEY=VALUE lines from the project-root .env into os.environ (never overrides real
+    environment variables). .env is git-ignored; share keys privately, never commit them."""
+    path = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    try:
+        with open(path, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except OSError:
+        return
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        value = value.strip().strip('"').strip("'")
+        if value:
+            os.environ.setdefault(key.strip(), value)
+
+
 def build_user_message(check_in, feedback_context, sources):
     slim = [{k: s.get(k) for k in ("id", "title", "content")} for s in sources]
     dump = lambda o: json.dumps(o, ensure_ascii=False, indent=2)
@@ -101,6 +120,7 @@ def generate_plan(check_in, feedback_context, sources):
     if not sources:
         return make_result("error", message="No retrieved sources; not generating unsupported advice.",
                            error_code="NO_SOURCES")
+    load_env_file()
     plan_id = "plan-" + uuid.uuid4().hex[:12]
 
     if os.environ.get("WORKWELL_OFFLINE") == "1":

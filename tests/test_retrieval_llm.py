@@ -112,3 +112,21 @@ def test_feedback_and_sources_reach_prompt():
     fb = dict(FB, completion="Not completed", previous_actions=["Stretch every hour"])
     msg = llm.build_user_message(NECK, fb, sources_for(NECK))
     assert "Not completed" in msg and "Stretch every hour" in msg and "KB-04" in msg
+
+
+def test_env_file_loaded_without_overriding(tmp_path, monkeypatch):
+    p = tmp_path / ".env"
+    p.write_text('# c\nWW_TEST_A="from-file"\nWW_TEST_B=file-b\nWW_EMPTY=\n')
+    monkeypatch.setenv("WW_TEST_B", "from-env")
+    monkeypatch.delenv("WW_TEST_A", raising=False)
+    monkeypatch.delenv("WW_EMPTY", raising=False)
+    llm.load_env_file(str(p))
+    import os
+    assert os.environ["WW_TEST_A"] == "from-file"
+    assert os.environ["WW_TEST_B"] == "from-env"
+    assert "WW_EMPTY" not in os.environ
+    monkeypatch.delenv("WW_TEST_A")
+
+
+def test_missing_env_file_is_fine(tmp_path):
+    llm.load_env_file(str(tmp_path / "nope"))
