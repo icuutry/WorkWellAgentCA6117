@@ -1,2 +1,5 @@
 # Shared direct runtime dependency. Update through a PR after team validation.
 streamlit==1.65.0
+# Model SDKs (member C). Only the provider chosen by WORKWELL_PROVIDER is used; keys come from environment variables.
+anthropic>=0.40,<1
+openai>=1.50,<3

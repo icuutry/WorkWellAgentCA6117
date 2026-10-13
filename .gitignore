@@ -1,0 +1,14 @@
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+demo_data/
+runtime_data/
+.local-tmp/
+.test-tmp/
+artifacts/
+.streamlit/secrets.toml
+.streamlit/secrets.*

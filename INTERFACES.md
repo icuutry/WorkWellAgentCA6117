@@ -55,17 +55,30 @@ Plan:
   "actions": [
     {
       "category": "break",
-      "advice": "Action supported by retrieved guidance",
+      "advice": "Stand up and change position to interrupt prolonged sitting.",
       "reason": "Reason based on current input and feedback",
-      "source_ids": ["KB-01"]
+      "source_ids": ["KB-01"],
+      "priority": 1,
+      "priority_reason": "Address prolonged sitting during desk work.",
+      "adjustment_reason": "First daily plan; no previous accepted plan or completion feedback exists."
     }
-  ]
+  ],
+  "execution_groups": [{
+    "group_id": "group-1",
+    "action_priorities": [1],
+    "title": "Separate supported action",
+    "merge_reason": "Keep this action separate; no approved complementary pair applies."
+  }]
 }
 ```
 
-The program generates plan_id; the model must not generate arbitrary identifiers. actions contains 1-3 items, each with all four fields. category must be break, workstation, screen_rest, or fatigue_management. advice/reason are non-empty strings. source_ids is a non-empty list of identifiers present in this result's sources. B checks the format and allowed categories. B/C must also check whether the content stays within scope and is supported by the sources, rather than checking identifiers alone.
+The provider returns internal selections with action_id, priority, reason, priority_reason and adjustment_reason. C materializes advice, category and citations from the source-linked catalog. Priorities are explicit unique integers 1..N, independent of list order. Incomplete feedback may retain 1-3 actions; no unconditional truncation applies.
 
-Each source contains id, title, content, and url. The first three are non-empty strings; url links to the actual original source. C maintains approximately 10-15 entries in `data/knowledge.json`. The file is currently empty and the knowledge base is not complete.
+New actions contain category, advice, reason, source_ids, priority, priority_reason and adjustment_reason. Plans also contain execution_groups, each with group_id, action_priorities, title and merge_reason. These groups preserve every action exactly once. Only the curated top-priority break/stretch pairs can share an arrangement; otherwise actions remain separate. Legacy four-field plans without groups remain readable for historical records.
+
+The program generates plan_id; the model must not generate arbitrary identifiers. actions contains 1-3 items. New actions include the three explicit priority/adjustment fields described above; all must be present together. category must be break, workstation, screen_rest, or fatigue_management. advice/reason are non-empty strings. source_ids is a non-empty list of identifiers present in this result's sources. B checks the format and allowed categories. B/C must also check whether the content stays within scope and is supported by the sources, rather than checking identifiers alone.
+
+Each source contains id, title, content, and url. Titles, content and source names are English. The first three are non-empty strings; url links to the original source. C supplies 14 entries in `data/knowledge.json`, including one reference-only warning entry excluded from plan retrieval. These are curated summaries, not clinically validated advice.
 
 ## 4 Records, feedback, and audit logs
 
@@ -76,6 +89,7 @@ Record fields: schema_version (integer 1), record_id (equal to plan_id), user_id
 - Rejected: plan_status=rejected, decision=rejected; it must not be used as an accepted plan later.
 - completion_feedback is initially null. D links subsequent feedback to the previous accepted plan, not to the new draft.
 - completion_feedback stores completion, reported_date, pain_score, and fatigue_score. completion is Completed, Partly completed, or Not completed. reported_date must be later than the associated plan date.
+- The field stores the latest report. A later simulated date may update it when an intervening plan was rejected; identical retries are harmless and conflicting reports for the same or earlier date are refused. Audit inputs retain previous workflow reports.
 
 D's save_record supports the initial draft save and transitions from draft to accepted/rejected. During transitions, verify that the user, date, check-in, plan, and sources are unchanged. A final decision cannot be reversed. Repeated saves of the same record_id and decision return saved without adding another record. Conflicting decisions return DUPLICATE_CONFLICT.
 
@@ -85,7 +99,7 @@ Audit event fields: event_id (for idempotent writes), timestamp, user_id, record
 
 | Owner | Function | Successful status and data |
 |---|---|---|
-| B | start_workflow(check_in: dict) -> dict | awaiting_confirmation; data={plan, sources}; trace shows actual steps |
+| B | start_workflow(check_in: dict) -> dict | awaiting_confirmation; data={plan, sources, mode}; mode is live or offline_demo |
 | B | submit_decision(record: dict) -> dict | saved; data={record_id} |
 | B | validate_input(check_in: dict) -> dict | ok; data={check_in: normalized input} |
 | B | check_safety(check_in: dict, history: list[dict]) -> dict | ok; data={}; warning input returns stopped |
@@ -113,4 +127,4 @@ A's `TeamBackend` converts the shared interface to the internal UI format. Teamm
 
 `Offline UI preview` uses the fixture inside app.py. Its return format is only for A's UI tests and matches the internal format produced by adapting actual interfaces. It is not actual retrieval, model generation, or a real safety implementation. Its data is saved in the ignored demo_data directory.
 
-The actual modules are currently placeholders that explicitly report NOT_IMPLEMENTED. Implement them individually before integrating. Passing placeholder tests proves only that placeholder behavior is explicit, not that the entire Agent is complete.
+All actual A/B/C/D modules are integrated. `WORKWELL_OFFLINE=1` runs real safety, retrieval, feedback and storage with explicitly labelled sample plan text. It is distinct from the standalone UI preview. The latest round made three real requests for three successive simulated days. See docs/three_day_validation.md, including final-code replay disclosure. Feedback is daily and partial completion does not force a one-action plan. Component tests continue to use substituted responses and make no real API requests.

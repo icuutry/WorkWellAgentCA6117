@@ -1,111 +1,94 @@
-# WorkWell Demo
+# WorkWell integrated prototype
 
-A classroom prototype for work-break planning and fatigue management, developed by a four-person team. Member A's Streamlit interface and standalone offline UI fixture are available. The actual B/C/D modules are placeholders that explicitly return NOT_IMPLEMENTED. The fixture does not call a language model, and its source placeholders are not health evidence.
+WorkWell combines the four member branches into a Streamlit classroom prototype for daily check-ins, source retrieval, bounded plan generation, human decisions, persistent memory and next-day feedback. All project content and generated plans use English. Use fictional users and simulated dates.
 
-Use fictional users and simulated data only. This version is a single-machine classroom prototype, unsuitable for actual employee health management.
+## Run locally
 
-## Uploading to an existing GitHub repository
+Python 3.12 is recommended. Create an isolated local `.venv` using the setup commands below; virtual environments are excluded from Git.
 
-Download and extract the ZIP, then copy the code and documents inside this directory to the root of your existing repository. The root should directly contain app.py, INTERFACES.md, requirements.txt, and the other files. Do not add an extra enclosing folder or upload only the ZIP: GitHub does not automatically extract it into source files.
+Windows PowerShell, from this folder:
 
-Upload to your own `a/ui-baseline` branch and open a PR. Merge into main after all four members confirm INTERFACES.md. This initial scaffold includes B/C/D placeholders. If teammates already have implementations with the same filenames, compare them first rather than overwriting them. Include dotfiles such as .github, .gitignore, .env.example, and .python-version when copying.
-
-## Files and ownership
-
-```text
-app.py                         A: UI, buttons, team adapter, offline UI fixture
-contracts.py                   Team: enums and shared result format
-workflow.py / safety.py         B: workflow and safety rules; placeholders
-retrieval.py / llm.py           C: retrieval and model calls; placeholders
-storage.py / feedback.py        D: storage and feedback; placeholders
-data/knowledge.json            C: knowledge base; currently empty
-tests/                         Logic, interface and Streamlit component tests
-INTERFACES.md                   Shared interface contract
-CONTRIBUTING.md                 Branch, PR, dependency and testing rules
-requirements.txt               UI runtime dependencies
-requirements-dev.txt           Runtime and test dependencies
-.github/workflows/tests.yml     GitHub automated tests
-.github/pull_request_template.md
-.env.example                   Empty configuration template; no actual secrets
-.gitignore / .python-version / pyproject.toml
+```powershell
+$env:WORKWELL_OFFLINE="1"
+.\.venv\Scripts\python.exe -m streamlit run app.py --server.address 127.0.0.1
 ```
 
-demo_data and runtime_data are runtime directories and must not be uploaded. The offline fixture currently uses demo_data. Member D's actual storage should use runtime_data.
+Open http://127.0.0.1:8501 and leave `Team modules` selected. Offline integration runs the actual B safety/workflow, C retrieval and D persistence modules. Plans are explicitly marked sample text; no model API is called. `Offline UI preview` is the separate A fixture and does not exercise the complete agent.
 
-## Python and virtual environments
-
-The team uses Python 3.12.x. Each member creates their own `.venv` on their computer and installs from the same dependency files. `.python-version` records the agreed version; it does not install Python or ensure that your system python command uses that version.
-
-Windows PowerShell, from the repository root:
+For a fresh installation:
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pytest
-.\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Calling the virtual environment's interpreter directly avoids changing the PowerShell execution policy. If `py` is unavailable, first verify that `python --version` is 3.12.x, then use `python -m venv .venv`.
+On macOS/Linux, use `python3.12 -m venv .venv` and `.venv/bin/python` in the equivalent commands.
 
-macOS / Linux:
+## Normal and next-day demonstrations
 
-```bash
-python3.12 -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.txt
-.venv/bin/python -m pytest
-.venv/bin/python -m streamlit run app.py
+1. Start with `demo-user`, simulated date 2026-10-10, sitting time 6, Neck, discomfort 3, fatigue 4, no warnings and completion `Not applicable`.
+2. Generate a draft. Review the explicit priorities, selection and adjustment reasons, execution arrangements, English sources, workflow steps and submitted input snapshot. The draft is saved but remains unaccepted.
+3. Accept or reject it explicitly. Inspect History and Audit log.
+4. Click `Simulate next day`. If an earlier accepted plan exists, report its completion explicitly; the button does not invent completion. Change the scores and generate again.
+5. Select a warning such as Numbness to demonstrate the safety stop. No retrieval or model call occurs after that stop.
+
+Do not modify form fields before confirming an existing draft. If fields change, confirmation refuses the stale draft and requires a new check-in. Form fields are submitted together, so an unsubmitted edit does not change the displayed submitted snapshot. Submitting identical input reuses the result. After a browser refresh, submit the exact same pending check-in to recover the persisted draft without another model call. Once a day has a final decision, use a later simulated date.
+
+`Simulate next day` advances the date and clears the displayed result without generating or saving a plan. Do not skip a draft awaiting your decision. After a partial decision save, retry the same decision; the opposite decision is blocked.
+
+## Data and reproducible scenarios
+
+Actual records and audit events are under ignored `runtime_data/`. The A fixture uses ignored `demo_data/`. Use `WORKWELL_DATA_DIR` in the shell to select another actual data directory. JSON files are atomically replaced; corrupt data is reported and preserved. Storage supports one local process, not concurrent processes writing the same directory.
+
+```powershell
+.\.venv\Scripts\python.exe demo_seed.py --list
+.\.venv\Scripts\python.exe demo_seed.py first_use
+.\.venv\Scripts\python.exe demo_seed.py with_history
 ```
 
-Install requirements.txt if you only need to run the page. For development, use requirements-dev.txt, which includes runtime dependencies. Do not commit .venv. Team members do not need identical directory paths.
+The seeder backs up existing files before resetting. `with_history` supplies an accepted plan on 2026-10-10; submit 2026-10-11 with completion `Partly completed`. Seed records are simulated history, not evidence of a real model call.
 
-## Using the page
+## Live model configuration
 
-The default mode is Offline UI preview. Fill out the form, generate a sample, accept or reject it, and view history and logs. Use increasing simulated dates for subsequent feedback. Warning input triggers a sample stop.
+The latest validation made exactly three real requests and advanced through three simulated days. See `docs/three_day_validation.md` for original outcomes and final-code cached replay. The model returns explicit priorities, selection reasons and daily adjustment reasons for 1-3 supported actions. Partial completion does not force truncation. Approved complementary top-priority actions can share one arrangement while keeping their separate content and citations. Copy `.env.example` to `.env`, choose exactly one provider and supply its key privately. Set `WORKWELL_OFFLINE=0`, restart the app and leave `Team modules` selected. An existing shell variable takes precedence over `.env`; remove or change the shell's offline setting when switching to live mode.
 
-Accepting or rejecting does not call the generation function again. If you change any form field before confirmation, the old draft is invalidated and a new plan is required. Submitting identical input keeps the current successful result; an error result can be retried. A browser refresh may recreate the session and clear unsaved drafts, while saved records remain available.
+- Zhipu: `WORKWELL_PROVIDER=zhipu`, `WORKWELL_MODEL=glm-4-flash`, `ZHIPU_API_KEY`.
+- Anthropic: `WORKWELL_PROVIDER=anthropic`, a supported model, `ANTHROPIC_API_KEY`.
+- OpenAI or compatible endpoint: `WORKWELL_PROVIDER=openai`, a supported model, `OPENAI_API_KEY`; optionally `OPENAI_BASE_URL`.
 
-Select Team modules for actual integration. Its interfaces use the shared envelope in INTERFACES.md. B/D should not reuse the list-return interfaces from the earlier member-A README. Unimplemented modules report explicit errors and never silently fall back to fixtures.
+Only the selected provider is called. Each request has a 30-second timeout and no SDK retries. API failure and invalid output stop generation. The workflow never substitutes an offline result after a live failure. Credentials, `.env`, runtime data and `.venv` are excluded from Git. Do not put credentials in screenshots, logs or tracked files.
 
-## Integrating the actual modules
+## Validate
 
-1. All four members confirm INTERFACES.md; it and contracts.py define the shared contract.
-2. B implements workflow and checks, C implements retrieval and model calls, and D implements storage and feedback.
-3. After choosing one model provider, C adds its SDK dependency and private configuration loading through a PR. .env.example is currently only a template; the program does not automatically load .env.
-4. A's TeamBackend is already connected to workflow.start_workflow, workflow.submit_decision, storage.load_history, and storage.load_logs.
-5. Each member adds tests for their module. After integration, run normal-input, next-day-feedback, and safety-stop scenarios.
-
-Never put API keys in source code or commit them. `.gitignore` only ignores untracked files; it cannot automatically remove keys or data already uploaded.
-
-## Shared test command
-
-Run `python -m pytest` using the project's virtual environment. The Windows/macOS commands above use the full interpreter path to run the same tests.
-
-- tests/test_app.py: repeated operations, stale-plan prevention, history and feedback, sample stops, corrupted-file protection, and save retries.
-- tests/test_interfaces.py: shared result format, adapter boundaries, and explicit error behavior of the current placeholders.
-- tests/test_ui.py: Streamlit AppTest checks for button states, confirmation, and changed fields.
-
-CI uses Python 3.12 and runs the same command. Uploading CI files does not enable main branch protection; see CONTRIBUTING.md for setup instructions.
-
-LangChain, vector databases, Docker, and complex deployment are unnecessary for the current demo. Complete the modules first, then consider extensions.
-
-## Suggested Git workflow
-
-The GitHub website or GitHub Desktop can also be used. If you have already cloned the repository, prepare your branch as follows:
-
-```bash
-git switch main
-git pull
-git switch -c a/ui-baseline
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-After copying the package files, review the changes and .gitignore before committing and pushing:
+This managed workspace restricts the system temporary directory. The included validation script places temporary test files inside the integration folder:
 
-```bash
-git status
-git diff
-git add .
-git commit -m "feat(ui): add WorkWell page and shared repository scaffold"
-git push -u origin a/ui-baseline
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\validate.ps1
 ```
 
-Then open a PR on GitHub. If a branch or implementation with the same name already exists, discuss it first. Do not use force push to overwrite teammates' work.
+See `docs/integration_report.md` for provenance and `docs/three_day_validation.md` for the latest policy, tests and real-response evidence. The report distinguishes real module execution from a substituted external model response. `docs/real_call_evidence.md` describes earlier member-C evidence, not a validated run of this revision.
+
+## Module responsibilities
+
+| Module | Responsibility |
+|---|---|
+| app.py | A interface, session state, adapter, decisions, history and audit display |
+| workflow.py and safety.py | B deterministic ordering, stop conditions and validation |
+| retrieval.py and llm.py | C retrieval, source-linked action selection, reasons and model calls |
+| storage.py, feedback.py and demo_seed.py | D atomic persistence, memory, feedback and simulated scenarios |
+| contracts.py and INTERFACES.md | Shared result envelope and schemas |
+
+The content checks are conservative heuristics. Legal source IDs and matching words do not establish clinical correctness or full semantic support. This is a course prototype, not a clinical system.
+
+## Documentation and deployment
+
+- `docs/module_guide.md`: purposes, ownership, interfaces, daily lifecycle and runtime modes.
+- `docs/streamlit_deployment.md`: exact dev/app.py deployment steps, offline configuration, private Secrets, verification and troubleshooting.
+- `docs/final_review.md`: final English/credential audit and five-day simulation results.
+- `docs/three_day_validation.md`: historical real-provider investigation and replay disclosure.
+
+Deployment target: `icuutry/WorkWellAgentCA6117`, branch `dev`, entry point `app.py`, Python 3.12. Keep `main` as the GitHub default if desired. Start the hosted demo with `WORKWELL_OFFLINE = "1"` in Streamlit Secrets; no private key is included in the repository. GitHub push and hosted deployment are separate operations.

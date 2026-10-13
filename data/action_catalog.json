@@ -1,0 +1,15 @@
+[
+  {"action_id":"ACT-KB-01","source_id":"KB-01","category":"break","advice":"Stand up and change position to interrupt prolonged sitting."},
+  {"action_id":"ACT-KB-02","source_id":"KB-02","category":"break","advice":"Take a brief walk to refill water or speak with a colleague."},
+  {"action_id":"ACT-KB-03","source_id":"KB-03","category":"workstation","advice":"Sit with your feet supported and your lower back supported by the chair."},
+  {"action_id":"ACT-KB-04","source_id":"KB-04","category":"workstation","advice":"Place the monitor directly in front of you with the top of the screen at or slightly below eye level."},
+  {"action_id":"ACT-KB-05","source_id":"KB-05","category":"workstation","advice":"Keep the keyboard and mouse close to your body with wrists in a neutral position."},
+  {"action_id":"ACT-KB-06","source_id":"KB-06","category":"screen_rest","advice":"Look away from the screen at a distant object and blink fully."},
+  {"action_id":"ACT-KB-07","source_id":"KB-07","category":"break","advice":"Perform slow, gentle neck and shoulder stretches, stopping if there is pain."},
+  {"action_id":"ACT-KB-08","source_id":"KB-08","category":"break","advice":"Use gentle movement to avoid prolonged rest."},
+  {"action_id":"ACT-KB-09","source_id":"KB-09","category":"break","advice":"Gently open and stretch your fingers and wrists during a short typing pause."},
+  {"action_id":"ACT-KB-10","source_id":"KB-10","category":"break","advice":"Take a brief break from computer tasks to relieve muscle tension and visual fatigue."},
+  {"action_id":"ACT-KB-11","source_id":"KB-11","category":"fatigue_management","advice":"Breathe slowly through the nose and out through the mouth while sitting comfortably."},
+  {"action_id":"ACT-KB-12","source_id":"KB-12","category":"fatigue_management","advice":"Maintain regular sleep times and drink enough water during the day."},
+  {"action_id":"ACT-KB-13","source_id":"KB-13","category":"screen_rest","advice":"Adjust screen brightness and text size and position the screen to reduce glare."}
+]

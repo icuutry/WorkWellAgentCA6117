@@ -1,7 +1,7 @@
 """WorkWell Streamlit interface owned by member A.
 
 Run: python -m streamlit run app.py
-Uses a clearly labeled offline UI fixture by default; no model API is called.
+Team modules are the default; offline modes are always clearly labelled.
 See INTERFACES.md in this directory for the team-module interfaces.
 """
 
@@ -12,7 +12,7 @@ import json
 import os
 import tempfile
 import uuid
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from contracts import ACTION_CATEGORIES, COMPLETION_OPTIONS, PAIN_LOCATIONS, WARNING_SIGNS, check_result
@@ -180,7 +180,8 @@ class TeamBackend:
         # Map the shared data envelope to the internal UI format; teammates need not use UI internals.
         return {"status": result["status"], "message": result["message"],
                 "error_code": result["error_code"], "trace": result["trace"],
-                "plan": result["data"].get("plan"), "sources": result["data"].get("sources", [])}
+                "plan": result["data"].get("plan"), "sources": result["data"].get("sources", []),
+                "mode": result["data"].get("mode")}
 
     def submit_decision(self, record):
         return check_result(self.workflow.submit_decision(record))
@@ -200,11 +201,14 @@ class TeamBackend:
 
 def handle_action(state, backend, check_in, action):
     """Separate button handling from rendering for clarity and testing. Return a message level and text."""
+    current = state.get("current")
+    key = fingerprint(check_in)
+    if (current and current.get("pending_record") and current.get("decision") is None
+            and (action == "generate" or current["fingerprint"] != key)):
+        return "warning", "A decision save is pending. Restore the submitted inputs and retry the original decision."
     if not check_in["user_id"].strip():
         state.pop("current", None)
         return "error", "Enter a fictional user ID."
-    current = state.get("current")
-    key = fingerprint(check_in)
     if action == "generate":
         if current and current["fingerprint"] == key and current["result"]["status"] != "error":
             return "info", "This submitted input already has a result. Change an input to create a new plan."
@@ -236,9 +240,19 @@ def handle_action(state, backend, check_in, action):
         current["pending_record"] = record
     saved = backend.submit_decision(copy.deepcopy(record))
     if not isinstance(saved, dict) or saved.get("status") != "saved":
+        if isinstance(saved, dict) and saved.get("status") == "error":
+            return "error", saved.get("message", "The decision could not be saved. Retry the same decision.")
         raise ValueError("Storage did not confirm that the decision was saved.")
     current["decision"] = action
     return "success", f"Plan {action}. Your decision has been saved."
+
+
+def advance_day(state):
+    """Advance the simulation without generating a plan or inventing completion feedback."""
+    state["simulated_date"] = state.get("simulated_date", date.today()) + timedelta(days=1)
+    state["previous_completion"] = "Not applicable"
+    state.pop("current", None)
+    state["notice"] = ("info", "Simulated date advanced. Report previous-plan completion and submit a new check-in.")
 
 
 def main():
@@ -249,7 +263,7 @@ def main():
     st.title("WorkWell")
     st.write("Daily check-in and work-break planning")
     st.caption("Classroom prototype. Fictional data only. General guidance, not diagnosis or treatment.")
-    mode = st.sidebar.radio("Run mode", ["Offline UI preview", "Team modules"])
+    mode = st.sidebar.radio("Run mode", ["Team modules", "Offline UI preview"])
     if st.session_state.get("backend_mode") != mode:
         st.session_state.pop("current", None)
         st.session_state.pop("notice", None)
@@ -263,7 +277,7 @@ def main():
         except Exception:
             st.error("Team modules could not be loaded. Check workflow.py, storage.py and their required functions.")
             st.stop()  # Do not silently switch to sample mode when team-module mode fails.
-        st.caption("Team module mode. Unimplemented modules return an explicit error; no sample result is substituted.")
+        st.caption("Connected to safety checks, source retrieval, persistent history and human decisions.")
 
     notice = st.session_state.pop("notice", None)
     if notice:
@@ -275,15 +289,16 @@ def main():
     st.subheader("Daily check-in")
     with st.form("check_in", clear_on_submit=False, enter_to_submit=False):
         user_id = st.text_input("Fictional user ID", value="demo-user", max_chars=50)
-        simulated_date = st.date_input("Simulated date", value=date.today())
+        simulated_date = st.date_input("Simulated date", value=date.today(), key="simulated_date")
         sitting_hours = st.number_input("Sitting time (hours)", min_value=0.0, max_value=24.0, value=6.0, step=0.5)
         pain_location = st.selectbox("Discomfort area", PAIN_LOCATIONS)
         pain_score = st.slider("Discomfort score", 0, 10, 0)
         fatigue_score = st.slider("Fatigue score", 0, 10, 3)
         warning_signs = st.multiselect("Warning signs", WARNING_SIGNS)
-        previous_completion = st.selectbox("Previous accepted plan completion", COMPLETION_OPTIONS)
+        previous_completion = st.selectbox("Previous accepted plan completion", COMPLETION_OPTIONS, key="previous_completion")
         st.caption("After changing any input, generate a new plan. Confirmation applies to the submitted snapshot.")
-        generate = st.form_submit_button("Generate plan")
+        generate = st.form_submit_button("Generate plan", disabled=bool(
+            current and current.get("pending_record") and current.get("decision") is None))
         accept = st.form_submit_button("Accept displayed plan", disabled=not can_decide)
         reject = st.form_submit_button("Reject displayed plan", disabled=not can_decide)
     check_in = {"user_id": user_id.strip(), "date": simulated_date.isoformat(),
@@ -302,6 +317,9 @@ def main():
         # Redraw disabled button states; submit buttons are False on rerun, so the model is not called again.
         st.rerun()
 
+    st.button("Simulate next day", on_click=advance_day, args=(st.session_state,),
+              disabled=bool(current and current.get("pending_record") and not current.get("decision")))
+
     if current:
         result = current["result"]
         st.subheader("Current result")
@@ -312,11 +330,22 @@ def main():
         elif result["status"] == "error":
             st.error(result.get("message", "Workflow error."))
         else:
+            if result.get("mode") == "offline_demo":
+                st.warning("Offline integration demo. Real retrieval, safety checks and storage are used; the plan is sample text and no model API was called.")
             st.info(result.get("message", "Review the draft plan."))
+            groups = result["plan"].get("execution_groups", [])
+            if groups:
+                st.subheader("Daily execution arrangements")
+                for group in groups:
+                    st.write(group["title"], "- priorities", ", ".join(map(str, group["action_priorities"])))
+                    st.caption(group["merge_reason"])
             for i, item in enumerate(result["plan"]["actions"], 1):
-                st.write(f"Action {i} — {item['category']}")
+                st.write(f"Priority {item.get('priority', i)} — {item['category']}")
                 st.write(item["advice"])
                 st.write("Reason:", item["reason"])
+                if "priority_reason" in item:
+                    st.write("Priority rationale:", item["priority_reason"])
+                    st.write("Daily adjustment:", item["adjustment_reason"])
                 st.write("Sources:", ", ".join(item["source_ids"]))
             with st.expander("Retrieved sources"):
                 for source in result["sources"]:
@@ -341,6 +370,11 @@ def main():
             if not isinstance(history, list):
                 raise ValueError("History must be a list.")
             if history:
+                accepted = [record for record in history if record.get("decision") == "accepted"
+                            and record.get("date", "") < check_in["date"]]
+                if accepted:
+                    previous = accepted[-1]
+                    st.caption(f"Previous accepted plan for this date: {previous['record_id']} ({previous['date']}).")
                 st.json(history)
             else:
                 st.write("No saved decisions for this fictional user.")

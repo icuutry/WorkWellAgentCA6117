@@ -1,0 +1,1292 @@
+{
+  "provider": "zhipu",
+  "model": "glm-4-flash",
+  "real_requests_this_round": 2,
+  "sdk_retries": 0,
+  "credential_written_to_files": false,
+  "attempts": [
+    {
+      "case": "first_day",
+      "api_requests": 1,
+      "input": {
+        "user_id": "live-test-user",
+        "date": "2026-10-13",
+        "sitting_hours": 6.0,
+        "pain_location": "Neck",
+        "pain_score": 3,
+        "fatigue_score": 4,
+        "warning_signs": [],
+        "previous_completion": "Not applicable"
+      },
+      "raw_response": "```json\n{\n  \"selections\": [\n    {\n      \"action_id\": \"ACT-KB-07\",\n      \"reason\": \"The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.\"\n    },\n    {\n      \"action_id\": \"ACT-KB-02\",\n      \"reason\": \"The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.\"\n    },\n    {\n      \"action_id\": \"ACT-KB-01\",\n      \"reason\": \"The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.\"\n    }\n  ]\n}\n```",
+      "result": {
+        "status": "awaiting_confirmation",
+        "message": "Draft saved. Review the plan and sources, then explicitly accept or reject it.",
+        "error_code": null,
+        "data": {
+          "plan": {
+            "plan_id": "025fa555-57a7-451e-a513-659b619694e5",
+            "actions": [
+              {
+                "category": "break",
+                "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.",
+                "source_ids": [
+                  "KB-07"
+                ]
+              },
+              {
+                "category": "break",
+                "advice": "Take a brief walk to refill water or speak with a colleague.",
+                "reason": "The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.",
+                "source_ids": [
+                  "KB-02"
+                ]
+              },
+              {
+                "category": "break",
+                "advice": "Stand up and change position to interrupt prolonged sitting.",
+                "reason": "The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.",
+                "source_ids": [
+                  "KB-01"
+                ]
+              }
+            ]
+          },
+          "sources": [
+            {
+              "id": "KB-10",
+              "title": "Microbreaks reduce strain",
+              "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+              "url": "https://www.cdc.gov/niosh/ergonomics/",
+              "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+              "category": "break",
+              "tags": [
+                "micro_break",
+                "fatigue",
+                "sedentary",
+                "neck",
+                "shoulder",
+                "wrist",
+                "eyes"
+              ],
+              "score": 9
+            },
+            {
+              "id": "KB-01",
+              "title": "Break up prolonged sitting",
+              "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+              "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+              "source_name": "WHO - Physical activity fact sheet",
+              "category": "break",
+              "tags": [
+                "sedentary",
+                "sitting",
+                "movement",
+                "micro_break",
+                "fatigue"
+              ],
+              "score": 8
+            },
+            {
+              "id": "KB-04",
+              "title": "Monitor height and distance",
+              "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+              "url": "https://www.osha.gov/etools/computer-workstations",
+              "source_name": "OSHA - Computer workstations eTool",
+              "category": "workstation",
+              "tags": [
+                "neck",
+                "shoulder",
+                "posture",
+                "monitor",
+                "workstation",
+                "eyes"
+              ],
+              "score": 7
+            },
+            {
+              "id": "KB-07",
+              "title": "Gentle neck and shoulder stretches",
+              "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+              "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+              "source_name": "CCOHS - Office ergonomics",
+              "category": "break",
+              "tags": [
+                "neck",
+                "shoulder",
+                "stretching",
+                "stiffness",
+                "upper_back"
+              ],
+              "score": 5
+            },
+            {
+              "id": "KB-02",
+              "title": "Short walking breaks",
+              "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+              "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+              "source_name": "WHO - Physical activity fact sheet",
+              "category": "break",
+              "tags": [
+                "sedentary",
+                "walking",
+                "movement",
+                "fatigue",
+                "stress"
+              ],
+              "score": 4
+            }
+          ],
+          "mode": "live"
+        },
+        "trace": [
+          {
+            "step": "validate_input",
+            "status": "ok",
+            "tool": "safety.validate_input"
+          },
+          {
+            "step": "check_safety",
+            "status": "ok",
+            "tool": "safety.check_safety"
+          },
+          {
+            "step": "load_history",
+            "status": "ok",
+            "tool": "storage.load_history"
+          },
+          {
+            "step": "build_feedback_context",
+            "status": "ok",
+            "tool": "feedback.build_feedback_context"
+          },
+          {
+            "step": "retrieve_guidance",
+            "status": "ok",
+            "tool": "retrieval.retrieve_guidance"
+          },
+          {
+            "step": "generate_plan",
+            "status": "ok",
+            "tool": "llm.generate_plan"
+          },
+          {
+            "step": "validate_plan",
+            "status": "ok",
+            "tool": "safety.validate_plan"
+          },
+          {
+            "step": "save_record",
+            "status": "saved",
+            "tool": "storage.save_record"
+          },
+          {
+            "step": "append_log",
+            "status": "saved",
+            "tool": "storage.append_log"
+          },
+          {
+            "step": "human_confirmation",
+            "status": "waiting",
+            "tool": "User confirmation"
+          }
+        ]
+      },
+      "human_decision": {
+        "decision": "accepted",
+        "level": "success",
+        "message": "Plan accepted. Your decision has been saved."
+      },
+      "elapsed_seconds": 13.27,
+      "prompt_context": "CHECK_IN:\n{\n  \"user_id\": \"live-test-user\",\n  \"date\": \"2026-10-13\",\n  \"sitting_hours\": 6.0,\n  \"pain_location\": \"Neck\",\n  \"pain_score\": 3,\n  \"fatigue_score\": 4,\n  \"warning_signs\": [],\n  \"previous_completion\": \"Not applicable\"\n}\n\nFEEDBACK (previous plan and results; may be empty):\n{\n  \"previous_plan_id\": null,\n  \"previous_actions\": [],\n  \"completion\": \"Not applicable\",\n  \"previous_pain_score\": null,\n  \"current_pain_score\": 3,\n  \"previous_fatigue_score\": null,\n  \"current_fatigue_score\": 4\n}\n\nSOURCES:\n[\n  {\n    \"id\": \"KB-10\",\n    \"title\": \"Microbreaks reduce strain\",\n    \"content\": \"Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-10\",\n        \"source_id\": \"KB-10\",\n        \"category\": \"break\",\n        \"advice\": \"Take a brief break from computer tasks to relieve muscle tension and visual fatigue.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-01\",\n    \"title\": \"Break up prolonged sitting\",\n    \"content\": \"Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-01\",\n        \"source_id\": \"KB-01\",\n        \"category\": \"break\",\n        \"advice\": \"Stand up and change position to interrupt prolonged sitting.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-04\",\n    \"title\": \"Monitor height and distance\",\n    \"content\": \"Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.\",\n    \"category\": \"workstation\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-04\",\n        \"source_id\": \"KB-04\",\n        \"category\": \"workstation\",\n        \"advice\": \"Place the monitor directly in front of you with the top of the screen at or slightly below eye level.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-07\",\n    \"title\": \"Gentle neck and shoulder stretches\",\n    \"content\": \"Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-07\",\n        \"source_id\": \"KB-07\",\n        \"category\": \"break\",\n        \"advice\": \"Perform slow, gentle neck and shoulder stretches, stopping if there is pain.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-02\",\n    \"title\": \"Short walking breaks\",\n    \"content\": \"Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-02\",\n        \"source_id\": \"KB-02\",\n        \"category\": \"break\",\n        \"advice\": \"Take a brief walk to refill water or speak with a colleague.\"\n      }\n    ]\n  }\n]"
+    },
+    {
+      "case": "next_day",
+      "api_requests": 1,
+      "input": {
+        "user_id": "live-test-user",
+        "date": "2026-10-14",
+        "sitting_hours": 6.0,
+        "pain_location": "Neck",
+        "pain_score": 3,
+        "fatigue_score": 6,
+        "warning_signs": [],
+        "previous_completion": "Partly completed"
+      },
+      "raw_response": "```json\n{\n  \"selections\": [\n    {\n      \"action_id\": \"ACT-KB-07\",\n      \"reason\": \"The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) were previously recommended and were partly completed. Since the pain score remains the same, it is appropriate to continue with this action to help manage the neck pain.\"\n    },\n    {\n      \"action_id\": \"ACT-KB-02\",\n      \"reason\": \"The employee has a high fatigue score, which has increased from the previous check-in. Short walking breaks (ACT-KB-02) were previously recommended and were partly completed. This action is effective in reducing sedentary time and increasing physical activity, which can help alleviate fatigue.\"\n    },\n    {\n      \"action_id\": \"ACT-KB-01\",\n      \"reason\": \"The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) was previously recommended and was partly completed. This action helps to interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting, which is particularly important given the increase in fatigue score.\"\n    }\n  ]\n}\n```",
+      "result": {
+        "status": "error",
+        "message": "Model generation failed; no routine plan was saved.",
+        "error_code": "INVALID_MODEL_OUTPUT",
+        "data": {},
+        "trace": [
+          {
+            "step": "validate_input",
+            "status": "ok",
+            "tool": "safety.validate_input"
+          },
+          {
+            "step": "check_safety",
+            "status": "ok",
+            "tool": "safety.check_safety"
+          },
+          {
+            "step": "load_history",
+            "status": "ok",
+            "tool": "storage.load_history"
+          },
+          {
+            "step": "save_feedback",
+            "status": "saved",
+            "tool": "storage.save_feedback"
+          },
+          {
+            "step": "build_feedback_context",
+            "status": "ok",
+            "tool": "feedback.build_feedback_context"
+          },
+          {
+            "step": "retrieve_guidance",
+            "status": "ok",
+            "tool": "retrieval.retrieve_guidance"
+          },
+          {
+            "step": "generate_plan",
+            "status": "error",
+            "tool": "llm.generate_plan"
+          },
+          {
+            "step": "append_log",
+            "status": "saved",
+            "tool": "storage.append_log"
+          }
+        ]
+      },
+      "elapsed_seconds": 17.69,
+      "prompt_context": "CHECK_IN:\n{\n  \"user_id\": \"live-test-user\",\n  \"date\": \"2026-10-14\",\n  \"sitting_hours\": 6.0,\n  \"pain_location\": \"Neck\",\n  \"pain_score\": 3,\n  \"fatigue_score\": 6,\n  \"warning_signs\": [],\n  \"previous_completion\": \"Partly completed\"\n}\n\nFEEDBACK (previous plan and results; may be empty):\n{\n  \"previous_plan_id\": \"025fa555-57a7-451e-a513-659b619694e5\",\n  \"previous_actions\": [\n    {\n      \"category\": \"break\",\n      \"advice\": \"Perform slow, gentle neck and shoulder stretches, stopping if there is pain.\",\n      \"reason\": \"The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.\",\n      \"source_ids\": [\n        \"KB-07\"\n      ]\n    },\n    {\n      \"category\": \"break\",\n      \"advice\": \"Take a brief walk to refill water or speak with a colleague.\",\n      \"reason\": \"The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.\",\n      \"source_ids\": [\n        \"KB-02\"\n      ]\n    },\n    {\n      \"category\": \"break\",\n      \"advice\": \"Stand up and change position to interrupt prolonged sitting.\",\n      \"reason\": \"The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.\",\n      \"source_ids\": [\n        \"KB-01\"\n      ]\n    }\n  ],\n  \"completion\": \"Partly completed\",\n  \"previous_pain_score\": 3,\n  \"current_pain_score\": 3,\n  \"previous_fatigue_score\": 4,\n  \"current_fatigue_score\": 6\n}\n\nSOURCES:\n[\n  {\n    \"id\": \"KB-10\",\n    \"title\": \"Microbreaks reduce strain\",\n    \"content\": \"Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-10\",\n        \"source_id\": \"KB-10\",\n        \"category\": \"break\",\n        \"advice\": \"Take a brief break from computer tasks to relieve muscle tension and visual fatigue.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-01\",\n    \"title\": \"Break up prolonged sitting\",\n    \"content\": \"Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-01\",\n        \"source_id\": \"KB-01\",\n        \"category\": \"break\",\n        \"advice\": \"Stand up and change position to interrupt prolonged sitting.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-02\",\n    \"title\": \"Short walking breaks\",\n    \"content\": \"Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-02\",\n        \"source_id\": \"KB-02\",\n        \"category\": \"break\",\n        \"advice\": \"Take a brief walk to refill water or speak with a colleague.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-04\",\n    \"title\": \"Monitor height and distance\",\n    \"content\": \"Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.\",\n    \"category\": \"workstation\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-04\",\n        \"source_id\": \"KB-04\",\n        \"category\": \"workstation\",\n        \"advice\": \"Place the monitor directly in front of you with the top of the screen at or slightly below eye level.\"\n      }\n    ]\n  },\n  {\n    \"id\": \"KB-07\",\n    \"title\": \"Gentle neck and shoulder stretches\",\n    \"content\": \"Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.\",\n    \"category\": \"break\",\n    \"allowed_actions\": [\n      {\n        \"action_id\": \"ACT-KB-07\",\n        \"source_id\": \"KB-07\",\n        \"category\": \"break\",\n        \"advice\": \"Perform slow, gentle neck and shoulder stretches, stopping if there is pain.\"\n      }\n    ]\n  }\n]"
+    }
+  ],
+  "final_revalidation": {
+    "response_origin": "replayed_second_real_response_after_deterministic_count_policy",
+    "api_requests": 0,
+    "result": {
+      "status": "awaiting_confirmation",
+      "message": "Draft saved. Review the plan and sources, then explicitly accept or reject it.",
+      "error_code": null,
+      "trace": [
+        {
+          "step": "validate_input",
+          "status": "ok",
+          "tool": "safety.validate_input"
+        },
+        {
+          "step": "check_safety",
+          "status": "ok",
+          "tool": "safety.check_safety"
+        },
+        {
+          "step": "load_history",
+          "status": "ok",
+          "tool": "storage.load_history"
+        },
+        {
+          "step": "save_feedback",
+          "status": "saved",
+          "tool": "storage.save_feedback"
+        },
+        {
+          "step": "build_feedback_context",
+          "status": "ok",
+          "tool": "feedback.build_feedback_context"
+        },
+        {
+          "step": "retrieve_guidance",
+          "status": "ok",
+          "tool": "retrieval.retrieve_guidance"
+        },
+        {
+          "step": "generate_plan",
+          "status": "ok",
+          "tool": "llm.generate_plan"
+        },
+        {
+          "step": "validate_plan",
+          "status": "ok",
+          "tool": "safety.validate_plan"
+        },
+        {
+          "step": "save_record",
+          "status": "saved",
+          "tool": "storage.save_record"
+        },
+        {
+          "step": "append_log",
+          "status": "saved",
+          "tool": "storage.append_log"
+        },
+        {
+          "step": "human_confirmation",
+          "status": "waiting",
+          "tool": "User confirmation"
+        }
+      ],
+      "plan": {
+        "plan_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+        "actions": [
+          {
+            "category": "break",
+            "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+            "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) were previously recommended and were partly completed. Since the pain score remains the same, it is appropriate to continue with this action to help manage the neck pain.",
+            "source_ids": [
+              "KB-07"
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "KB-10",
+          "title": "Microbreaks reduce strain",
+          "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+          "url": "https://www.cdc.gov/niosh/ergonomics/",
+          "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+          "category": "break",
+          "tags": [
+            "micro_break",
+            "fatigue",
+            "sedentary",
+            "neck",
+            "shoulder",
+            "wrist",
+            "eyes"
+          ],
+          "score": 11
+        },
+        {
+          "id": "KB-01",
+          "title": "Break up prolonged sitting",
+          "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+          "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+          "source_name": "WHO - Physical activity fact sheet",
+          "category": "break",
+          "tags": [
+            "sedentary",
+            "sitting",
+            "movement",
+            "micro_break",
+            "fatigue"
+          ],
+          "score": 10
+        },
+        {
+          "id": "KB-02",
+          "title": "Short walking breaks",
+          "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+          "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+          "source_name": "WHO - Physical activity fact sheet",
+          "category": "break",
+          "tags": [
+            "sedentary",
+            "walking",
+            "movement",
+            "fatigue",
+            "stress"
+          ],
+          "score": 7
+        },
+        {
+          "id": "KB-04",
+          "title": "Monitor height and distance",
+          "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+          "url": "https://www.osha.gov/etools/computer-workstations",
+          "source_name": "OSHA - Computer workstations eTool",
+          "category": "workstation",
+          "tags": [
+            "neck",
+            "shoulder",
+            "posture",
+            "monitor",
+            "workstation",
+            "eyes"
+          ],
+          "score": 7
+        },
+        {
+          "id": "KB-07",
+          "title": "Gentle neck and shoulder stretches",
+          "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+          "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+          "source_name": "CCOHS - Office ergonomics",
+          "category": "break",
+          "tags": [
+            "neck",
+            "shoulder",
+            "stretching",
+            "stiffness",
+            "upper_back"
+          ],
+          "score": 5
+        }
+      ],
+      "mode": "live"
+    },
+    "human_decision": {
+      "decision": "rejected",
+      "level": "success",
+      "message": "Plan rejected. Your decision has been saved."
+    },
+    "history": {
+      "status": "ok",
+      "message": "2 record(s) loaded.",
+      "error_code": null,
+      "data": {
+        "records": [
+          {
+            "schema_version": 1,
+            "record_id": "025fa555-57a7-451e-a513-659b619694e5",
+            "user_id": "live-test-user",
+            "date": "2026-10-13",
+            "timestamp": "2026-10-13T03:06:43+08:00",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-13",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 4,
+              "warning_signs": [],
+              "previous_completion": "Not applicable"
+            },
+            "plan": {
+              "plan_id": "025fa555-57a7-451e-a513-659b619694e5",
+              "actions": [
+                {
+                  "category": "break",
+                  "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                  "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.",
+                  "source_ids": [
+                    "KB-07"
+                  ]
+                },
+                {
+                  "category": "break",
+                  "advice": "Take a brief walk to refill water or speak with a colleague.",
+                  "reason": "The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.",
+                  "source_ids": [
+                    "KB-02"
+                  ]
+                },
+                {
+                  "category": "break",
+                  "advice": "Stand up and change position to interrupt prolonged sitting.",
+                  "reason": "The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.",
+                  "source_ids": [
+                    "KB-01"
+                  ]
+                }
+              ]
+            },
+            "sources": [
+              {
+                "id": "KB-10",
+                "title": "Microbreaks reduce strain",
+                "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+                "url": "https://www.cdc.gov/niosh/ergonomics/",
+                "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+                "category": "break",
+                "tags": [
+                  "micro_break",
+                  "fatigue",
+                  "sedentary",
+                  "neck",
+                  "shoulder",
+                  "wrist",
+                  "eyes"
+                ],
+                "score": 9
+              },
+              {
+                "id": "KB-01",
+                "title": "Break up prolonged sitting",
+                "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+                "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                "source_name": "WHO - Physical activity fact sheet",
+                "category": "break",
+                "tags": [
+                  "sedentary",
+                  "sitting",
+                  "movement",
+                  "micro_break",
+                  "fatigue"
+                ],
+                "score": 8
+              },
+              {
+                "id": "KB-04",
+                "title": "Monitor height and distance",
+                "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+                "url": "https://www.osha.gov/etools/computer-workstations",
+                "source_name": "OSHA - Computer workstations eTool",
+                "category": "workstation",
+                "tags": [
+                  "neck",
+                  "shoulder",
+                  "posture",
+                  "monitor",
+                  "workstation",
+                  "eyes"
+                ],
+                "score": 7
+              },
+              {
+                "id": "KB-07",
+                "title": "Gentle neck and shoulder stretches",
+                "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+                "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+                "source_name": "CCOHS - Office ergonomics",
+                "category": "break",
+                "tags": [
+                  "neck",
+                  "shoulder",
+                  "stretching",
+                  "stiffness",
+                  "upper_back"
+                ],
+                "score": 5
+              },
+              {
+                "id": "KB-02",
+                "title": "Short walking breaks",
+                "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+                "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                "source_name": "WHO - Physical activity fact sheet",
+                "category": "break",
+                "tags": [
+                  "sedentary",
+                  "walking",
+                  "movement",
+                  "fatigue",
+                  "stress"
+                ],
+                "score": 4
+              }
+            ],
+            "plan_status": "accepted",
+            "decision": "accepted",
+            "completion_feedback": {
+              "completion": "Partly completed",
+              "reported_date": "2026-10-14",
+              "pain_score": 3,
+              "fatigue_score": 6
+            }
+          },
+          {
+            "schema_version": 1,
+            "record_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+            "user_id": "live-test-user",
+            "date": "2026-10-14",
+            "timestamp": "2026-10-13T03:08:53+08:00",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-14",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 6,
+              "warning_signs": [],
+              "previous_completion": "Partly completed"
+            },
+            "plan": {
+              "plan_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+              "actions": [
+                {
+                  "category": "break",
+                  "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                  "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) were previously recommended and were partly completed. Since the pain score remains the same, it is appropriate to continue with this action to help manage the neck pain.",
+                  "source_ids": [
+                    "KB-07"
+                  ]
+                }
+              ]
+            },
+            "sources": [
+              {
+                "id": "KB-10",
+                "title": "Microbreaks reduce strain",
+                "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+                "url": "https://www.cdc.gov/niosh/ergonomics/",
+                "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+                "category": "break",
+                "tags": [
+                  "micro_break",
+                  "fatigue",
+                  "sedentary",
+                  "neck",
+                  "shoulder",
+                  "wrist",
+                  "eyes"
+                ],
+                "score": 11
+              },
+              {
+                "id": "KB-01",
+                "title": "Break up prolonged sitting",
+                "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+                "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                "source_name": "WHO - Physical activity fact sheet",
+                "category": "break",
+                "tags": [
+                  "sedentary",
+                  "sitting",
+                  "movement",
+                  "micro_break",
+                  "fatigue"
+                ],
+                "score": 10
+              },
+              {
+                "id": "KB-02",
+                "title": "Short walking breaks",
+                "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+                "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                "source_name": "WHO - Physical activity fact sheet",
+                "category": "break",
+                "tags": [
+                  "sedentary",
+                  "walking",
+                  "movement",
+                  "fatigue",
+                  "stress"
+                ],
+                "score": 7
+              },
+              {
+                "id": "KB-04",
+                "title": "Monitor height and distance",
+                "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+                "url": "https://www.osha.gov/etools/computer-workstations",
+                "source_name": "OSHA - Computer workstations eTool",
+                "category": "workstation",
+                "tags": [
+                  "neck",
+                  "shoulder",
+                  "posture",
+                  "monitor",
+                  "workstation",
+                  "eyes"
+                ],
+                "score": 7
+              },
+              {
+                "id": "KB-07",
+                "title": "Gentle neck and shoulder stretches",
+                "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+                "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+                "source_name": "CCOHS - Office ergonomics",
+                "category": "break",
+                "tags": [
+                  "neck",
+                  "shoulder",
+                  "stretching",
+                  "stiffness",
+                  "upper_back"
+                ],
+                "score": 5
+              }
+            ],
+            "plan_status": "rejected",
+            "decision": "rejected",
+            "completion_feedback": null
+          }
+        ]
+      },
+      "trace": [
+        {
+          "step": "Read history",
+          "status": "completed",
+          "tool": "JSON record store"
+        }
+      ]
+    },
+    "audit": {
+      "status": "ok",
+      "message": "5 audit event(s) loaded.",
+      "error_code": null,
+      "data": {
+        "events": [
+          {
+            "event_id": "generation:025fa555-57a7-451e-a513-659b619694e5",
+            "timestamp": "2026-10-13T03:06:43+08:00",
+            "user_id": "live-test-user",
+            "record_id": "025fa555-57a7-451e-a513-659b619694e5",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-13",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 4,
+              "warning_signs": [],
+              "previous_completion": "Not applicable"
+            },
+            "action": "draft_generated",
+            "source_ids": [
+              "KB-10",
+              "KB-01",
+              "KB-04",
+              "KB-07",
+              "KB-02"
+            ],
+            "human_decision": null,
+            "output": {
+              "status": "awaiting_confirmation",
+              "plan": {
+                "plan_id": "025fa555-57a7-451e-a513-659b619694e5",
+                "actions": [
+                  {
+                    "category": "break",
+                    "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                    "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.",
+                    "source_ids": [
+                      "KB-07"
+                    ]
+                  },
+                  {
+                    "category": "break",
+                    "advice": "Take a brief walk to refill water or speak with a colleague.",
+                    "reason": "The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.",
+                    "source_ids": [
+                      "KB-02"
+                    ]
+                  },
+                  {
+                    "category": "break",
+                    "advice": "Stand up and change position to interrupt prolonged sitting.",
+                    "reason": "The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.",
+                    "source_ids": [
+                      "KB-01"
+                    ]
+                  }
+                ]
+              },
+              "sources": [
+                {
+                  "id": "KB-10",
+                  "title": "Microbreaks reduce strain",
+                  "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+                  "url": "https://www.cdc.gov/niosh/ergonomics/",
+                  "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+                  "category": "break",
+                  "tags": [
+                    "micro_break",
+                    "fatigue",
+                    "sedentary",
+                    "neck",
+                    "shoulder",
+                    "wrist",
+                    "eyes"
+                  ],
+                  "score": 9
+                },
+                {
+                  "id": "KB-01",
+                  "title": "Break up prolonged sitting",
+                  "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+                  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                  "source_name": "WHO - Physical activity fact sheet",
+                  "category": "break",
+                  "tags": [
+                    "sedentary",
+                    "sitting",
+                    "movement",
+                    "micro_break",
+                    "fatigue"
+                  ],
+                  "score": 8
+                },
+                {
+                  "id": "KB-04",
+                  "title": "Monitor height and distance",
+                  "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+                  "url": "https://www.osha.gov/etools/computer-workstations",
+                  "source_name": "OSHA - Computer workstations eTool",
+                  "category": "workstation",
+                  "tags": [
+                    "neck",
+                    "shoulder",
+                    "posture",
+                    "monitor",
+                    "workstation",
+                    "eyes"
+                  ],
+                  "score": 7
+                },
+                {
+                  "id": "KB-07",
+                  "title": "Gentle neck and shoulder stretches",
+                  "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+                  "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+                  "source_name": "CCOHS - Office ergonomics",
+                  "category": "break",
+                  "tags": [
+                    "neck",
+                    "shoulder",
+                    "stretching",
+                    "stiffness",
+                    "upper_back"
+                  ],
+                  "score": 5
+                },
+                {
+                  "id": "KB-02",
+                  "title": "Short walking breaks",
+                  "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+                  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                  "source_name": "WHO - Physical activity fact sheet",
+                  "category": "break",
+                  "tags": [
+                    "sedentary",
+                    "walking",
+                    "movement",
+                    "fatigue",
+                    "stress"
+                  ],
+                  "score": 4
+                }
+              ],
+              "trace": [
+                {
+                  "step": "validate_input",
+                  "status": "ok",
+                  "tool": "safety.validate_input"
+                },
+                {
+                  "step": "check_safety",
+                  "status": "ok",
+                  "tool": "safety.check_safety"
+                },
+                {
+                  "step": "load_history",
+                  "status": "ok",
+                  "tool": "storage.load_history"
+                },
+                {
+                  "step": "build_feedback_context",
+                  "status": "ok",
+                  "tool": "feedback.build_feedback_context"
+                },
+                {
+                  "step": "retrieve_guidance",
+                  "status": "ok",
+                  "tool": "retrieval.retrieve_guidance"
+                },
+                {
+                  "step": "generate_plan",
+                  "status": "ok",
+                  "tool": "llm.generate_plan"
+                },
+                {
+                  "step": "validate_plan",
+                  "status": "ok",
+                  "tool": "safety.validate_plan"
+                },
+                {
+                  "step": "save_record",
+                  "status": "saved",
+                  "tool": "storage.save_record"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "decision:025fa555-57a7-451e-a513-659b619694e5",
+            "timestamp": "2026-10-13T03:06:43+08:00",
+            "user_id": "live-test-user",
+            "record_id": "025fa555-57a7-451e-a513-659b619694e5",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-13",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 4,
+              "warning_signs": [],
+              "previous_completion": "Not applicable"
+            },
+            "action": "human_decision",
+            "source_ids": [
+              "KB-10",
+              "KB-01",
+              "KB-04",
+              "KB-07",
+              "KB-02"
+            ],
+            "human_decision": "accepted",
+            "output": {
+              "status": "accepted",
+              "record_id": "025fa555-57a7-451e-a513-659b619694e5",
+              "plan": {
+                "plan_id": "025fa555-57a7-451e-a513-659b619694e5",
+                "actions": [
+                  {
+                    "category": "break",
+                    "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                    "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) can help ease the stiffness from desk work and are a suitable action for neck pain.",
+                    "source_ids": [
+                      "KB-07"
+                    ]
+                  },
+                  {
+                    "category": "break",
+                    "advice": "Take a brief walk to refill water or speak with a colleague.",
+                    "reason": "The employee has a high fatigue score. Short walking breaks (ACT-KB-02) can help reduce sedentary time and increase physical activity, which may help alleviate fatigue.",
+                    "source_ids": [
+                      "KB-02"
+                    ]
+                  },
+                  {
+                    "category": "break",
+                    "advice": "Stand up and change position to interrupt prolonged sitting.",
+                    "reason": "The employee has been sitting for 6 hours, which is a prolonged period. Standing up and changing position (ACT-KB-01) can help interrupt prolonged sitting and reduce the risk of health issues associated with long periods of sitting.",
+                    "source_ids": [
+                      "KB-01"
+                    ]
+                  }
+                ]
+              },
+              "trace": [
+                {
+                  "step": "validate_decision",
+                  "status": "ok",
+                  "tool": "workflow.submit_decision"
+                },
+                {
+                  "step": "load_history",
+                  "status": "ok",
+                  "tool": "storage.load_history"
+                },
+                {
+                  "step": "verify_record",
+                  "status": "ok",
+                  "tool": "workflow.submit_decision"
+                },
+                {
+                  "step": "save_record",
+                  "status": "saved",
+                  "tool": "storage.save_record"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "482ede5f-7544-4510-ba62-60cbe60c8463",
+            "timestamp": "2026-10-13T03:07:21+08:00",
+            "user_id": "live-test-user",
+            "record_id": null,
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-14",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 6,
+              "warning_signs": [],
+              "previous_completion": "Partly completed"
+            },
+            "action": "workflow_error",
+            "source_ids": [],
+            "output": {
+              "status": "error",
+              "message": "Model generation failed; no routine plan was saved.",
+              "error_code": "INVALID_MODEL_OUTPUT",
+              "data": {},
+              "trace": [
+                {
+                  "step": "validate_input",
+                  "status": "ok",
+                  "tool": "safety.validate_input"
+                },
+                {
+                  "step": "check_safety",
+                  "status": "ok",
+                  "tool": "safety.check_safety"
+                },
+                {
+                  "step": "load_history",
+                  "status": "ok",
+                  "tool": "storage.load_history"
+                },
+                {
+                  "step": "save_feedback",
+                  "status": "saved",
+                  "tool": "storage.save_feedback"
+                },
+                {
+                  "step": "build_feedback_context",
+                  "status": "ok",
+                  "tool": "feedback.build_feedback_context"
+                },
+                {
+                  "step": "retrieve_guidance",
+                  "status": "ok",
+                  "tool": "retrieval.retrieve_guidance"
+                },
+                {
+                  "step": "generate_plan",
+                  "status": "error",
+                  "tool": "llm.generate_plan"
+                }
+              ]
+            },
+            "human_decision": null
+          },
+          {
+            "event_id": "generation:dd233d87-aa26-46c5-a993-8da3bb481b04",
+            "timestamp": "2026-10-13T03:08:53+08:00",
+            "user_id": "live-test-user",
+            "record_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-14",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 6,
+              "warning_signs": [],
+              "previous_completion": "Partly completed"
+            },
+            "action": "draft_generated",
+            "source_ids": [
+              "KB-10",
+              "KB-01",
+              "KB-02",
+              "KB-04",
+              "KB-07"
+            ],
+            "human_decision": null,
+            "output": {
+              "status": "awaiting_confirmation",
+              "plan": {
+                "plan_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+                "actions": [
+                  {
+                    "category": "break",
+                    "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                    "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) were previously recommended and were partly completed. Since the pain score remains the same, it is appropriate to continue with this action to help manage the neck pain.",
+                    "source_ids": [
+                      "KB-07"
+                    ]
+                  }
+                ]
+              },
+              "sources": [
+                {
+                  "id": "KB-10",
+                  "title": "Microbreaks reduce strain",
+                  "content": "Brief, frequent breaks from computer tasks (a minute or two, taken often) are recommended to relieve muscle tension and visual fatigue, and are generally easier to keep up than a few long breaks.",
+                  "url": "https://www.cdc.gov/niosh/ergonomics/",
+                  "source_name": "CDC/NIOSH - Ergonomics and musculoskeletal disorders",
+                  "category": "break",
+                  "tags": [
+                    "micro_break",
+                    "fatigue",
+                    "sedentary",
+                    "neck",
+                    "shoulder",
+                    "wrist",
+                    "eyes"
+                  ],
+                  "score": 11
+                },
+                {
+                  "id": "KB-01",
+                  "title": "Break up prolonged sitting",
+                  "content": "Sitting for long periods without interruption is linked to poorer health. Standing up, changing position or moving for a few minutes at regular intervals (for example every 30-60 minutes) is a common recommendation for desk workers.",
+                  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                  "source_name": "WHO - Physical activity fact sheet",
+                  "category": "break",
+                  "tags": [
+                    "sedentary",
+                    "sitting",
+                    "movement",
+                    "micro_break",
+                    "fatigue"
+                  ],
+                  "score": 10
+                },
+                {
+                  "id": "KB-02",
+                  "title": "Short walking breaks",
+                  "content": "Adults are encouraged to limit sedentary time and replace it with physical activity of any intensity. A brief walk to refill water, use the stairs or talk to a colleague in person is an easy way to add movement.",
+                  "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+                  "source_name": "WHO - Physical activity fact sheet",
+                  "category": "break",
+                  "tags": [
+                    "sedentary",
+                    "walking",
+                    "movement",
+                    "fatigue",
+                    "stress"
+                  ],
+                  "score": 7
+                },
+                {
+                  "id": "KB-04",
+                  "title": "Monitor height and distance",
+                  "content": "Place the top of the screen at or slightly below eye level and about an arm's length away, directly in front of you. A screen that is too high or too low or off to one side encourages neck and shoulder strain.",
+                  "url": "https://www.osha.gov/etools/computer-workstations",
+                  "source_name": "OSHA - Computer workstations eTool",
+                  "category": "workstation",
+                  "tags": [
+                    "neck",
+                    "shoulder",
+                    "posture",
+                    "monitor",
+                    "workstation",
+                    "eyes"
+                  ],
+                  "score": 7
+                },
+                {
+                  "id": "KB-07",
+                  "title": "Gentle neck and shoulder stretches",
+                  "content": "Slow, gentle stretches such as tilting the ear toward the shoulder or rolling the shoulders back can ease stiffness from desk work. Stretch only to mild tension, hold briefly, breathe normally, and stop if there is pain.",
+                  "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/index.html",
+                  "source_name": "CCOHS - Office ergonomics",
+                  "category": "break",
+                  "tags": [
+                    "neck",
+                    "shoulder",
+                    "stretching",
+                    "stiffness",
+                    "upper_back"
+                  ],
+                  "score": 5
+                }
+              ],
+              "trace": [
+                {
+                  "step": "validate_input",
+                  "status": "ok",
+                  "tool": "safety.validate_input"
+                },
+                {
+                  "step": "check_safety",
+                  "status": "ok",
+                  "tool": "safety.check_safety"
+                },
+                {
+                  "step": "load_history",
+                  "status": "ok",
+                  "tool": "storage.load_history"
+                },
+                {
+                  "step": "save_feedback",
+                  "status": "saved",
+                  "tool": "storage.save_feedback"
+                },
+                {
+                  "step": "build_feedback_context",
+                  "status": "ok",
+                  "tool": "feedback.build_feedback_context"
+                },
+                {
+                  "step": "retrieve_guidance",
+                  "status": "ok",
+                  "tool": "retrieval.retrieve_guidance"
+                },
+                {
+                  "step": "generate_plan",
+                  "status": "ok",
+                  "tool": "llm.generate_plan"
+                },
+                {
+                  "step": "validate_plan",
+                  "status": "ok",
+                  "tool": "safety.validate_plan"
+                },
+                {
+                  "step": "save_record",
+                  "status": "saved",
+                  "tool": "storage.save_record"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "decision:dd233d87-aa26-46c5-a993-8da3bb481b04",
+            "timestamp": "2026-10-13T03:08:53+08:00",
+            "user_id": "live-test-user",
+            "record_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+            "input": {
+              "user_id": "live-test-user",
+              "date": "2026-10-14",
+              "sitting_hours": 6.0,
+              "pain_location": "Neck",
+              "pain_score": 3,
+              "fatigue_score": 6,
+              "warning_signs": [],
+              "previous_completion": "Partly completed"
+            },
+            "action": "human_decision",
+            "source_ids": [
+              "KB-10",
+              "KB-01",
+              "KB-02",
+              "KB-04",
+              "KB-07"
+            ],
+            "human_decision": "rejected",
+            "output": {
+              "status": "rejected",
+              "record_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+              "plan": {
+                "plan_id": "dd233d87-aa26-46c5-a993-8da3bb481b04",
+                "actions": [
+                  {
+                    "category": "break",
+                    "advice": "Perform slow, gentle neck and shoulder stretches, stopping if there is pain.",
+                    "reason": "The employee reported neck pain, which is a discomfort area. Gentle neck and shoulder stretches (ACT-KB-07) were previously recommended and were partly completed. Since the pain score remains the same, it is appropriate to continue with this action to help manage the neck pain.",
+                    "source_ids": [
+                      "KB-07"
+                    ]
+                  }
+                ]
+              },
+              "trace": [
+                {
+                  "step": "validate_decision",
+                  "status": "ok",
+                  "tool": "workflow.submit_decision"
+                },
+                {
+                  "step": "load_history",
+                  "status": "ok",
+                  "tool": "storage.load_history"
+                },
+                {
+                  "step": "verify_record",
+                  "status": "ok",
+                  "tool": "workflow.submit_decision"
+                },
+                {
+                  "step": "save_record",
+                  "status": "saved",
+                  "tool": "storage.save_record"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "step": "Read audit log",
+          "status": "completed",
+          "tool": "JSON audit log"
+        }
+      ]
+    }
+  }
+}

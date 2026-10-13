@@ -17,6 +17,7 @@ class UITests(unittest.TestCase):
         self.patch = patch.dict(os.environ, {'WORKWELL_DEMO_FILE': str(Path(self.tmp.name) / 'ui.json')})
         self.patch.start()
         self.ui = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=20).run()
+        self.ui.radio[0].set_value('Offline UI preview').run()
 
     def tearDown(self):
         self.patch.stop()

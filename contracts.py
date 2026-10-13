@@ -5,6 +5,38 @@ WARNING_SIGNS = ["Numbness", "Radiating pain", "Severe headache", "Persistent wo
 COMPLETION_OPTIONS = ["Not applicable", "Completed", "Partly completed", "Not completed"]
 ACTION_CATEGORIES = {"break", "workstation", "screen_rest", "fatigue_management"}
 RESULT_STATUSES = {"ok", "saved", "awaiting_confirmation", "stopped", "error"}
+ACTION_DETAIL_FIELDS = {"priority", "priority_reason", "adjustment_reason"}
+MERGEABLE_SOURCE_PAIRS = {frozenset({"KB-02", "KB-07"}), frozenset({"KB-01", "KB-07"})}
+
+
+def is_english_content(value):
+    """Script check for curated English content; not a full language classifier."""
+    return (isinstance(value, str) and bool(value.strip())
+            and any("a" <= c.lower() <= "z" for c in value)
+            and not any(c.isalpha() and not c.isascii() for c in value))
+
+
+def execution_groups(actions):
+    """Group complementary top priorities while retaining every original action."""
+    ordered = sorted(actions, key=lambda action: action["priority"])
+    groups = []
+    merged = False
+    if len(ordered) >= 2:
+        first, second = ordered[:2]
+        ids = set(first["source_ids"] + second["source_ids"])
+        merged = (first["category"] == second["category"] == "break"
+                  and len(first["source_ids"]) == len(second["source_ids"]) == 1
+                  and frozenset(ids) in MERGEABLE_SOURCE_PAIRS)
+        if merged:
+            groups.append({"group_id": "group-1", "action_priorities": [1, 2],
+                           "title": "Combined priority work break",
+                           "merge_reason": "A movement break and gentle neck/shoulder stretches can share one work break. Both actions and their separate sources are retained."})
+    for action in ordered[2:] if merged else ordered:
+        groups.append({"group_id": f"group-{len(groups) + 1}",
+                       "action_priorities": [action["priority"]],
+                       "title": "Separate supported action",
+                       "merge_reason": "Keep this action separate; no approved complementary pair applies."})
+    return groups
 
 
 def make_result(status, *, data=None, message="", error_code=None, trace=None):
