@@ -255,6 +255,31 @@ def advance_day(state):
     state["notice"] = ("info", "Simulated date advanced. Report previous-plan completion and submit a new check-in.")
 
 
+def change_user(state):
+    """Refresh user-filtered views and discard the previous user's displayed draft."""
+    state.pop("current", None)
+    state["previous_completion"] = "Not applicable"
+    state["notice"] = ("info", "Fictional user changed. History refreshed; submit a check-in for this user.")
+
+
+def history_summary(records):
+    """Keep the most recent records readable; full payloads remain available separately."""
+    return [{"Date": r.get("date", ""),
+             "Status": r.get("decision") or r.get("plan_status", "draft"),
+             "Actions": len(r.get("plan", {}).get("actions", [])),
+             "Completion": (r.get("completion_feedback") or {}).get("completion", "Not reported"),
+             "Record ID": r.get("record_id", "")}
+            for r in reversed(records[-20:])]
+
+
+def audit_summary(events):
+    """Summarize events without expanding stored inputs, plans and traces."""
+    return [{"Time": e.get("timestamp", ""), "Event": e.get("action", e.get("event", "")),
+             "Decision": e.get("human_decision") or e.get("decision", ""),
+             "Record ID": e.get("record_id") or ""}
+            for e in reversed(events[-20:])]
+
+
 def main():
     # Import inside main so interface handlers can be tested without Streamlit.
     import streamlit as st
@@ -287,8 +312,13 @@ def main():
     can_decide = bool(current and current["result"]["status"] == "awaiting_confirmation"
                       and current["decision"] is None)
     st.subheader("Daily check-in")
+    user_id = st.text_input(
+        "Fictional user ID", value="demo-user", max_chars=50, key="fictional_user_id",
+        on_change=change_user, args=(st.session_state,),
+        disabled=bool(current and current.get("pending_record") and not current.get("decision")),
+        help="Press Enter or leave this field to refresh history. Changing users clears the displayed plan.",
+    )
     with st.form("check_in", clear_on_submit=False, enter_to_submit=False):
-        user_id = st.text_input("Fictional user ID", value="demo-user", max_chars=50)
         simulated_date = st.date_input("Simulated date", value=date.today(), key="simulated_date")
         sitting_hours = st.number_input("Sitting time (hours)", min_value=0.0, max_value=24.0, value=6.0, step=0.5)
         pain_location = st.selectbox("Discomfort area", PAIN_LOCATIONS)
@@ -332,7 +362,11 @@ def main():
         else:
             if result.get("mode") == "offline_demo":
                 st.warning("Offline integration demo. Real retrieval, safety checks and storage are used; the plan is sample text and no model API was called.")
-            st.info(result.get("message", "Review the draft plan."))
+            if current["decision"]:
+                st.success(f"Plan {current['decision']}. Your decision has been saved. "
+                           "Simulate the next day to report completion and submit a new check-in.")
+            else:
+                st.info(result.get("message", "Review the draft plan."))
             groups = result["plan"].get("execution_groups", [])
             if groups:
                 st.subheader("Daily execution arrangements")
@@ -356,7 +390,10 @@ def main():
                         st.write(url)
         with st.expander("Workflow steps", expanded=True):
             for step in result.get("trace", []):
-                st.write(step.get("step", "Step"), "—", step.get("status", ""), "—", step.get("tool", ""))
+                step_status = step.get("status", "")
+                if current["decision"] and step.get("step") in {"human_confirmation", "Human checkpoint"}:
+                    step_status = current["decision"] + " and saved"
+                st.write(step.get("step", "Step"), "—", step_status, "—", step.get("tool", ""))
         with st.expander("Submitted input snapshot"):
             st.json(current["input"])
     else:
@@ -375,7 +412,10 @@ def main():
                 if accepted:
                     previous = accepted[-1]
                     st.caption(f"Previous accepted plan for this date: {previous['record_id']} ({previous['date']}).")
-                st.json(history)
+                st.caption(f"{len(history)} saved records. Showing the latest {min(20, len(history))}.")
+                st.dataframe(history_summary(history), hide_index=True, width="stretch")
+                with st.expander("History details (JSON)"):
+                    st.json(history)
             else:
                 st.write("No saved decisions for this fictional user.")
         except Exception:
@@ -386,7 +426,10 @@ def main():
             if not isinstance(logs, list):
                 raise ValueError("Logs must be a list.")
             if logs:
-                st.json(logs)
+                st.caption(f"{len(logs)} audit events. Showing the latest {min(20, len(logs))}.")
+                st.dataframe(audit_summary(logs), hide_index=True, width="stretch")
+                with st.expander("Audit details (JSON)"):
+                    st.json(logs)
             else:
                 st.write("No audit events for this fictional user.")
         except Exception:

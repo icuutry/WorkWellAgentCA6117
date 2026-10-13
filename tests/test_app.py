@@ -5,6 +5,25 @@ from pathlib import Path
 import app
 
 class PageLogicTests(unittest.TestCase):
+    def test_history_summary_limits_rows_and_flattens_feedback(self):
+        records = [{'record_id': str(i), 'date': '2026-10-13', 'decision': None,
+                    'plan_status': 'awaiting_confirmation', 'plan': {'actions': [{}]},
+                    'completion_feedback': None} for i in range(25)]
+        records[-1]['completion_feedback'] = {'completion': 'Partly completed'}
+        rows = app.history_summary(records)
+        self.assertEqual(len(rows), 20)
+        self.assertEqual(rows[0]['Record ID'], '24')
+        self.assertEqual(rows[0]['Completion'], 'Partly completed')
+        self.assertEqual(rows[-1]['Completion'], 'Not reported')
+
+    def test_audit_summary_supports_team_and_preview_events(self):
+        rows = app.audit_summary([
+            {'action': 'human_decision', 'human_decision': 'accepted', 'record_id': 'team'},
+            {'event': 'human_decision', 'decision': 'rejected', 'record_id': 'preview'}])
+        self.assertEqual(rows[0]['Decision'], 'rejected')
+        self.assertEqual(rows[1]['Decision'], 'accepted')
+        self.assertTrue(all(row['Event'] == 'human_decision' for row in rows))
+
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory()
         self.backend=app.DemoBackend(Path(self.tmp.name)/'data.json')

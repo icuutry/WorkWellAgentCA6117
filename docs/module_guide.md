@@ -52,6 +52,10 @@ Offline mode is deliberate and visible. Live API failure never silently switches
 
 ## Storage and operation
 
+The fictional user ID is outside the check-in form. Press Enter or leave that field to refresh user-filtered history and audit views without generating a plan. Switching users clears the displayed draft and completion selection. User switching is disabled while a decision save is pending so the same decision remains retryable. Other check-in fields are submitted together as a snapshot.
+
+After confirmation, the result message and human checkpoint reflect the saved decision. History and audit tabs show compact tables of the latest twenty entries, with complete JSON available in collapsed detail panels. Completion feedback is summarized on the earlier accepted record; the underlying stored payloads are unchanged.
+
 runtime_data/records.json stores drafts, decisions and the latest completion feedback. runtime_data/audit_log.json stores generation, failure and human-decision events. WORKWELL_DATA_DIR can select another directory. The UI fixture uses demo_data/. These directories are ignored and are not published.
 
 Use increasing simulated dates. An identical pending check-in can recover a saved draft after a new browser session without a new model call. A day with a final decision cannot be regenerated using a different snapshot. After an uncertain save, restore the submitted inputs and retry the same decision. Corrupt files are reported and preserved.
