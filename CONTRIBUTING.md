@@ -4,7 +4,7 @@
 
 A owns the interface, B safety/workflow, C retrieval/model calls and D storage/feedback. contracts.py, INTERFACES.md, dependency files and integration documentation are shared. Review changes with the affected member before publishing them.
 
-The member branches preserve original contributions. This local integration folder combines their implementations on integration/local. Publish to dev only after the repository owner authorizes the push. Use pull requests for subsequent shared changes; avoid force pushes and overwriting teammates' branches.
+Use dev for integration and main for reviewed releases. Original member branches remain available. The main release preserves their commit ancestry through an explicit history merge while retaining the already integrated working tree. Use pull requests for subsequent shared changes; avoid force pushes and overwriting member branches.
 
 ## Development
 

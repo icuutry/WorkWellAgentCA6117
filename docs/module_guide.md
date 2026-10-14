@@ -48,7 +48,7 @@ Selection and priority reasons are generated explanations. Advice is constrained
 | Team modules, WORKWELL_OFFLINE=1 | Full workflow, retrieval and persistence with clearly labelled catalog sample advice | None |
 | Offline UI preview | A's independent UI fixture and separate sample storage | None |
 
-Offline mode is deliberate and visible. Live API failure never silently switches to a sample plan. Tests replace the external model boundary; they are not evidence of live provider availability.
+Offline mode is deliberate and visible. Live API failure never silently switches to a sample plan. Tests replace the external model boundary; they are not evidence of live provider availability. See evaluation.md for hosted live outcomes and remaining explanation errors.
 
 ## Storage and operation
 
@@ -66,4 +66,4 @@ The prototype supports one local process. Visitors must use distinct fictional I
 
 Use the commands in README.md. Runtime packages are in requirements.txt; test packages are in requirements-dev.txt. requirements-lock.txt records the validated development environment. Never publish a private .env or .streamlit/secrets.toml. Only empty configuration templates are tracked.
 
-Run python tools/audit_release.py, then python -m pytest -q. On this managed Windows workspace, validate.ps1 handles the temporary-directory restriction. test_five_day_stress.py runs five consecutive simulated days ten times, using prior provider response shapes with simulated reasons. Tests prohibit external socket connections and HTTP/model requests; Windows event-loop communication over loopback is allowed.
+Run python tools/audit_release.py, then python -m pytest -q. On this managed Windows workspace, validate.ps1 handles the temporary-directory restriction. test_five_day_stress.py runs five consecutive simulated days ten times, using minimal recorded provider selection fixtures with simulated reasons. Tests prohibit external socket connections and HTTP/model requests; Windows event-loop communication over loopback is allowed.

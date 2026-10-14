@@ -1,94 +1,74 @@
-# WorkWell integrated prototype
+# WorkWell
 
-WorkWell combines the four member branches into a Streamlit classroom prototype for daily check-ins, source retrieval, bounded plan generation, human decisions, persistent memory and next-day feedback. All project content and generated plans use English. Use fictional users and simulated dates.
+WorkWell is an English Streamlit proof of concept for daily desk-work check-ins. It combines source retrieval, bounded model selections, safety checks, human acceptance or rejection, stored history and next-day feedback. Use fictional users and simulated dates.
 
-## Run locally
+## Install and run
 
-Python 3.12 is recommended. Create an isolated local `.venv` using the setup commands below; virtual environments are excluded from Git.
-
-Windows PowerShell, from this folder:
-
-```powershell
-$env:WORKWELL_OFFLINE="1"
-.\.venv\Scripts\python.exe -m streamlit run app.py --server.address 127.0.0.1
-```
-
-Open http://127.0.0.1:8501 and leave `Team modules` selected. Offline integration runs the actual B safety/workflow, C retrieval and D persistence modules. Plans are explicitly marked sample text; no model API is called. `Offline UI preview` is the separate A fixture and does not exercise the complete agent.
-
-For a fresh installation:
+Python 3.12 is supported; the validated local version is 3.12.14. From the repository root:
 
 ```powershell
 py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+$env:WORKWELL_OFFLINE="1"
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+Open http://localhost:8501 and select Team modules. On macOS/Linux use python3.12 and .venv/bin/python; set WORKWELL_OFFLINE=1 with your shell's environment syntax. Codespaces uses Python 3.12, installs development dependencies and defaults to offline mode; start the same Streamlit command from its terminal.
+
+## Demonstrate the workflow
+
+1. Enter a unique fictional user ID. Press Enter or leave the field to refresh history without generating a plan.
+2. Use today's simulated date, sitting time 6, Neck, discomfort 3, fatigue 4, no warnings and completion Not applicable.
+3. Generate a plan. Review priorities, selection reasons, adjustment reasons, execution groups, retrieved English sources and workflow steps.
+4. Explicitly accept or reject the unchanged draft. History and Audit log show compact summaries and expandable complete JSON.
+5. Simulate next day. Report completion of the previous accepted plan, update scores and generate again.
+6. Use a separate fictional user with Numbness selected to demonstrate a safe stop before retrieval or model use.
+
+Changing a submitted input prevents confirmation of its old draft. Changing users clears the displayed result. If a decision save fails, retry the original decision; user switching is disabled while it is pending. Use increasing dates. Exact pending input can recover a stored draft after refresh without generating again. Viewing history, accepting/rejecting and advancing dates do not call the model.
+
+## Runtime modes and provider configuration
+
+- Team modules with WORKWELL_OFFLINE=1 runs real workflow, retrieval, validation and storage using labelled sample advice. No model is called.
+- Team modules with WORKWELL_OFFLINE=0 calls the selected provider for a new valid check-in. Live failures do not fall back to samples.
+- Offline UI preview is the separate interface fixture, not the complete workflow.
+
+For live operation, copy .env.example to a private .env or configure hosted Secrets. Set WORKWELL_OFFLINE=0, WORKWELL_PROVIDER=zhipu, WORKWELL_MODEL=glm-4-flash and a private ZHIPU_API_KEY. Anthropic and OpenAI are also supported with their corresponding environment keys. Restart after configuration changes. Existing environment values take precedence over .env. Each request has a 30-second timeout and no SDK retries. Never commit keys or private configuration.
+
+## Tests
+
+```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-```
-
-On macOS/Linux, use `python3.12 -m venv .venv` and `.venv/bin/python` in the equivalent commands.
-
-## Normal and next-day demonstrations
-
-1. Start with `demo-user`, simulated date 2026-10-10, sitting time 6, Neck, discomfort 3, fatigue 4, no warnings and completion `Not applicable`.
-2. Generate a draft. Review the explicit priorities, selection and adjustment reasons, execution arrangements, English sources, workflow steps and submitted input snapshot. The draft is saved but remains unaccepted.
-3. Accept or reject it explicitly. Inspect History and Audit log.
-4. Click `Simulate next day`. If an earlier accepted plan exists, report its completion explicitly; the button does not invent completion. Change the scores and generate again.
-5. Select a warning such as Numbness to demonstrate the safety stop. No retrieval or model call occurs after that stop.
-
-Do not modify form fields before confirming an existing draft. If fields change, confirmation refuses the stale draft and requires a new check-in. Form fields are submitted together, so an unsubmitted edit does not change the displayed submitted snapshot. Submitting identical input reuses the result. After a browser refresh, submit the exact same pending check-in to recover the persisted draft without another model call. Once a day has a final decision, use a later simulated date.
-
-`Simulate next day` advances the date and clears the displayed result without generating or saving a plan. Do not skip a draft awaiting your decision. After a partial decision save, retry the same decision; the opposite decision is blocked.
-
-## Data and reproducible scenarios
-
-Actual records and audit events are under ignored `runtime_data/`. The A fixture uses ignored `demo_data/`. Use `WORKWELL_DATA_DIR` in the shell to select another actual data directory. JSON files are atomically replaced; corrupt data is reported and preserved. Storage supports one local process, not concurrent processes writing the same directory.
-
-```powershell
-.\.venv\Scripts\python.exe demo_seed.py --list
-.\.venv\Scripts\python.exe demo_seed.py first_use
-.\.venv\Scripts\python.exe demo_seed.py with_history
-```
-
-The seeder backs up existing files before resetting. `with_history` supplies an accepted plan on 2026-10-10; submit 2026-10-11 with completion `Partly completed`. Seed records are simulated history, not evidence of a real model call.
-
-## Live model configuration
-
-The latest validation made exactly three real requests and advanced through three simulated days. See `docs/three_day_validation.md` for original outcomes and final-code cached replay. The model returns explicit priorities, selection reasons and daily adjustment reasons for 1-3 supported actions. Partial completion does not force truncation. Approved complementary top-priority actions can share one arrangement while keeping their separate content and citations. Copy `.env.example` to `.env`, choose exactly one provider and supply its key privately. Set `WORKWELL_OFFLINE=0`, restart the app and leave `Team modules` selected. An existing shell variable takes precedence over `.env`; remove or change the shell's offline setting when switching to live mode.
-
-- Zhipu: `WORKWELL_PROVIDER=zhipu`, `WORKWELL_MODEL=glm-4-flash`, `ZHIPU_API_KEY`.
-- Anthropic: `WORKWELL_PROVIDER=anthropic`, a supported model, `ANTHROPIC_API_KEY`.
-- OpenAI or compatible endpoint: `WORKWELL_PROVIDER=openai`, a supported model, `OPENAI_API_KEY`; optionally `OPENAI_BASE_URL`.
-
-Only the selected provider is called. Each request has a 30-second timeout and no SDK retries. API failure and invalid output stop generation. The workflow never substitutes an offline result after a live failure. Credentials, `.env`, runtime data and `.venv` are excluded from Git. Do not put credentials in screenshots, logs or tracked files.
-
-## Validate
-
-```powershell
 .\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe tools\audit_release.py
 ```
 
-This managed workspace restricts the system temporary directory. The included validation script places temporary test files inside the integration folder:
+On the managed Windows workspace, use .\validate.ps1 to put temporary test files inside the workspace. Tests block external requests and use isolated storage; no API key is required. GitHub Actions runs audit and tests on dev/main pushes and relevant pull requests. requirements.txt defines runtime versions/ranges, requirements-dev.txt adds pytest, and requirements-lock.txt records the tested environment.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\validate.ps1
-```
+## Source and documentation
 
-See `docs/integration_report.md` for provenance and `docs/three_day_validation.md` for the latest policy, tests and real-response evidence. The report distinguishes real module execution from a substituted external model response. `docs/real_call_evidence.md` describes earlier member-C evidence, not a validated run of this revision.
-
-## Module responsibilities
-
-| Module | Responsibility |
+| File or directory | Purpose |
 |---|---|
-| app.py | A interface, session state, adapter, decisions, history and audit display |
-| workflow.py and safety.py | B deterministic ordering, stop conditions and validation |
-| retrieval.py and llm.py | C retrieval, source-linked action selection, reasons and model calls |
-| storage.py, feedback.py and demo_seed.py | D atomic persistence, memory, feedback and simulated scenarios |
-| contracts.py and INTERFACES.md | Shared result envelope and schemas |
+| app.py | A: English interface, user switching, submitted snapshots, decisions and summaries |
+| workflow.py, safety.py | B: orchestration, safe stops, output checks and retry handling |
+| retrieval.py, llm.py, data/ | C: curated knowledge, retrieval, bounded model selection and explanations |
+| storage.py, feedback.py, demo_seed.py | D: JSON persistence, feedback and reproducible fictional scenarios |
+| contracts.py, INTERFACES.md | Shared schemas, priorities and approved execution groups |
+| tests/, tests/fixtures/ | Unit, integration, UI and offline simulation tests with minimal fixtures |
+| docs/module_guide.md | Detailed responsibilities, configuration, lifecycle and limits |
+| docs/streamlit_deployment.md | Hosting, private provider setup and evaluation steps |
+| docs/evaluation.md | Test results, source provenance and known errors |
+| SAFETY_RULES.md | Warning-stop rules and demonstration cases |
 
-The content checks are conservative heuristics. Legal source IDs and matching words do not establish clinical correctness or full semantic support. This is a course prototype, not a clinical system.
+## Hosting and storage
 
-## Documentation and deployment
+Current dev demonstration: https://workwellagentca6117-nxjw3hxhk7qdph9knoxhs6.streamlit.app/
 
-- `docs/module_guide.md`: purposes, ownership, interfaces, daily lifecycle and runtime modes.
-- `docs/streamlit_deployment.md`: exact dev/app.py deployment steps, offline configuration, private Secrets, verification and troubleshooting.
-- `docs/final_review.md`: final English/credential audit and five-day simulation results.
-- `docs/three_day_validation.md`: historical real-provider investigation and replay disclosure.
+For a main deployment select repository icuutry/WorkWellAgentCA6117, branch main, entry app.py and Python 3.12. Deployment instructions cover both offline and live Secrets. main updates do not change the existing dev deployment.
 
-Deployment target: `icuutry/WorkWellAgentCA6117`, branch `dev`, entry point `app.py`, Python 3.12. Keep `main` as the GitHub default if desired. Start the hosted demo with `WORKWELL_OFFLINE = "1"` in Streamlit Secrets; no private key is included in the repository. GitHub push and hosted deployment are separate operations.
+Actual records and audit events use ignored runtime_data/; WORKWELL_DATA_DIR can select another directory. The UI fixture uses ignored demo_data/. demo_seed.py --list lists reproducible scenarios and backs up files before a reset. Local cloud disk is not durable storage across rebuilds or restarts. The prototype supports one process and has no real-user authentication; fictional IDs filter histories but are not access controls.
+
+## Known limits
+
+This is general desk-work guidance, not diagnosis or treatment. Source IDs, bounded advice and heuristic content checks do not prove clinical correctness or complete semantic grounding. Live tests found incorrect score references and unsupported claims in model-generated explanations that current checks did not reject. These remain documented limitations; the release cleanup does not claim to fix them. See docs/evaluation.md.
+
+main keeps maintainable source, runnable tests and current documentation. Detailed historical reports remain in dev and the separate dev submission archive. Member histories are preserved in main without replacing the integrated files with old branch versions.

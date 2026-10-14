@@ -25,9 +25,8 @@ def test_five_consecutive_days_repeated_ten_times(repeat, monkeypatch):
     for name in ("ZHIPU_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY"):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(llm, "load_env_file", lambda: None)
-    evidence = json.loads((Path(__file__).parents[1] / "docs/three_day_evidence.json").read_text(encoding="utf-8"))
-    templates = [json.loads(raw["raw_response"].strip().removeprefix("```json").removesuffix("```").strip())["selections"]
-                 for raw in evidence["days"]]
+    fixture = json.loads((Path(__file__).parent / "fixtures/provider_selections.json").read_text(encoding="utf-8"))
+    templates = fixture["templates"]
     calls = []
 
     def simulated_model(provider, model, system, user):

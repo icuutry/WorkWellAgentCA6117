@@ -1,6 +1,6 @@
 # WorkWell interface contract v1
 
-Keep this file at the repository root and merge it into the `main` branch through a PR so all four members can use it. `main` is a branch name, not a directory to create. This is the first version for team confirmation. When changing fields, enums, or function signatures, update this file and `contracts.py` in the PR and notify affected members.
+This document defines the integrated module interfaces. When changing fields, enums or function signatures, update this file and contracts.py together and review compatibility with the affected modules.
 
 ## 1 Input fields
 
@@ -127,4 +127,4 @@ A's `TeamBackend` converts the shared interface to the internal UI format. Teamm
 
 `Offline UI preview` uses the fixture inside app.py. Its return format is only for A's UI tests and matches the internal format produced by adapting actual interfaces. It is not actual retrieval, model generation, or a real safety implementation. Its data is saved in the ignored demo_data directory.
 
-All actual A/B/C/D modules are integrated. `WORKWELL_OFFLINE=1` runs real safety, retrieval, feedback and storage with explicitly labelled sample plan text. It is distinct from the standalone UI preview. The latest round made three real requests for three successive simulated days. See docs/three_day_validation.md, including final-code replay disclosure. Feedback is daily and partial completion does not force a one-action plan. Component tests continue to use substituted responses and make no real API requests.
+All actual A/B/C/D modules are integrated. `WORKWELL_OFFLINE=1` runs real safety, retrieval, feedback and storage with explicitly labelled sample plan text. It is distinct from the standalone UI preview. Hosted live results and known explanation errors are documented in docs/evaluation.md. Detailed historical investigations remain in dev. Feedback is daily and partial completion does not force a one-action plan. Component tests continue to use substituted responses and make no real API requests.

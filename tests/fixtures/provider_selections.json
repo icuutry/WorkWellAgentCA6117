@@ -1,0 +1,74 @@
+{
+  "description": "Recorded historical provider selections used only as templates for offline simulation. Tests replace explanations and ranks using simulated inputs.",
+  "templates": [
+    [
+      {
+        "action_id": "ACT-KB-07",
+        "priority": 1,
+        "reason": "Supported action for the reported discomfort.",
+        "priority_reason": "Neck pain is reported, and gentle stretches are effective for relief.",
+        "adjustment_reason": "No change in pain score, so the priority remains the same."
+      },
+      {
+        "action_id": "ACT-KB-01",
+        "priority": 2,
+        "reason": "Interrupt prolonged sitting to improve overall comfort.",
+        "priority_reason": "Long sitting hours contribute to discomfort, and regular breaks are beneficial.",
+        "adjustment_reason": "No change in sitting hours, so the priority remains the same."
+      },
+      {
+        "action_id": "ACT-KB-02",
+        "priority": 3,
+        "reason": "Add movement to reduce fatigue and improve well-being.",
+        "priority_reason": "Fatigue score is moderate, and short walking breaks can help.",
+        "adjustment_reason": "No change in fatigue score, so the priority remains the same."
+      }
+    ],
+    [
+      {
+        "action_id": "ACT-KB-07",
+        "priority": 1,
+        "reason": "Supported action for the reported discomfort.",
+        "priority_reason": "Neck pain is reported, and gentle stretches are effective for relief.",
+        "adjustment_reason": "No significant change in pain score; continue with effective stretch action."
+      },
+      {
+        "action_id": "ACT-KB-01",
+        "priority": 2,
+        "reason": "Interrupt prolonged sitting to improve overall comfort.",
+        "priority_reason": "Long sitting hours contribute to discomfort, and regular breaks are beneficial.",
+        "adjustment_reason": "No significant change in fatigue score, but maintaining regular breaks is important."
+      },
+      {
+        "action_id": "ACT-KB-02",
+        "priority": 3,
+        "reason": "Add movement to reduce fatigue and improve well-being.",
+        "priority_reason": "Fatigue score has increased, indicating a need for more movement.",
+        "adjustment_reason": "Increased fatigue score suggests a need for additional activity breaks."
+      }
+    ],
+    [
+      {
+        "action_id": "ACT-KB-07",
+        "priority": 1,
+        "reason": "Supported action for the reported discomfort.",
+        "priority_reason": "Neck pain is still present, and gentle stretches are effective for relief.",
+        "adjustment_reason": "Pain score has decreased slightly, indicating some relief from the stretches."
+      },
+      {
+        "action_id": "ACT-KB-01",
+        "priority": 2,
+        "reason": "Interrupt prolonged sitting to improve overall comfort.",
+        "priority_reason": "Sitting hours remain high, and regular breaks are beneficial for comfort.",
+        "adjustment_reason": "No significant change in fatigue score, but maintaining regular breaks is important."
+      },
+      {
+        "action_id": "ACT-KB-02",
+        "priority": 3,
+        "reason": "Add movement to reduce fatigue and improve well-being.",
+        "priority_reason": "Fatigue score has decreased, indicating some benefit from previous movement recommendations.",
+        "adjustment_reason": "Increased activity has helped reduce fatigue, suggesting the need for continued movement."
+      }
+    ]
+  ]
+}

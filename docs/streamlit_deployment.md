@@ -1,17 +1,17 @@
-# Deploy WorkWell from the dev branch
+# Deploy WorkWell
 
 This guide is for the exact integrated repository. Streamlit Community Cloud can deploy the Python application directly. GitHub's default branch can remain main; the deployment explicitly selects dev.
 
 ## Deployment status
 
-The release is prepared and verified for dev. Creating the hosted application requires an authenticated Streamlit Community Cloud account and the GitHub connection consent flow. The current agent session has GitHub CLI access but no authenticated Streamlit browser session or Streamlit deployment tool. No hosted URL is claimed. The public Streamlit portal requires JavaScript and account interaction.
+The current hosted demonstration is https://workwellagentca6117-nxjw3hxhk7qdph9knoxhs6.streamlit.app/ and selects dev. It was checked in offline mode and with three live generations on 2026-10-13. Publishing main does not change that deployment. For the reviewed release, create a separate application selecting main, validate it, and share its actual URL. Changing an existing application's GitHub coordinates requires redeployment. Keep any needed runtime evidence and privately retain Secrets before deleting an application.
 
 ## Create the application
 
 1. Open https://share.streamlit.io/ and sign in or create a Community Cloud account.
 2. Connect the GitHub account icuutry and authorize access to the repository. Follow the platform's GitHub consent prompts.
 3. Select Create app and the option for an existing GitHub application.
-4. Set Repository to icuutry/WorkWellAgentCA6117, Branch to dev, and Main file path to app.py. Source files must be at the repository root; do not point to the ZIP archive.
+4. Set Repository to icuutry/WorkWellAgentCA6117, Branch to main, and Main file path to app.py. Source files must be at the repository root; do not point to the ZIP archive.
 5. Open Advanced settings and select Python 3.12. requirements.txt is installed automatically. validate.ps1 is a local Windows helper, not the cloud entry point.
 6. For the first deployment, paste the following TOML into Secrets. This configuration requires no model credential and spends no API quota:
 
@@ -33,7 +33,7 @@ WORKWELL_OFFLINE = "0"
 ZHIPU_API_KEY = "<YOUR_PRIVATE_KEY_ENTERED_ONLY_IN_STREAMLIT_SETTINGS>"
 ```
 
-Replace the placeholder privately in Streamlit settings. Never paste a real key into GitHub, this document, a screenshot or public source. Streamlit loads root-level secrets into the application's environment. The prior temporary test credential is not included in this release and has not been configured for a public app.
+Replace the placeholder privately in Streamlit settings. Never paste a real key into GitHub, this document, a screenshot or public source. Streamlit loads root-level secrets into the application's environment. No credential value is included in this release. The owner configures the hosted provider privately.
 
 Generate calls the selected provider only for a new valid check-in. Refreshing, viewing history and confirming an existing draft do not call it again. API calls still have the provider's quota/charges even though webpage hosting is free. To conserve quota, leave the shared demonstration in offline mode unless live operation is needed.
 
@@ -48,7 +48,7 @@ Generate calls the selected provider only for a new valid check-in. Refreshing, 
 
 ## Important hosting behavior
 
-- Changes pushed to the selected dev branch update the deployed application. Keep a tested commit for the presentation and avoid changing dev during the live demo.
+- Changes pushed to the selected deployment branch update the deployed application. Keep a tested commit for the presentation and avoid changing that branch during the live demo.
 - Community Cloud apps without traffic for 12 hours can sleep. Open the app before presenting; a visitor with access can wake it.
 - Local JSON files are not durable cloud storage. Restart/rebuild/hibernation may remove runtime history. For this simulated proof of concept, use new fictional IDs and recreate a short daily sequence. Reliable long-term history requires an external persistent store and separate validation.
 - The app has no real-user authentication. Distinct fictional IDs separate demonstration histories but are not an access-control system.
@@ -59,7 +59,7 @@ Generate calls the selected provider only for a new valid check-in. Refreshing, 
 | Symptom | Check |
 |---|---|
 | Repository not listed | Correct GitHub account/owner, repository access and connection authorization |
-| app.py not found | Branch dev and root entry point app.py; source was extracted rather than uploaded as a ZIP |
+| app.py not found | Selected branch and root entry point app.py; source was extracted rather than uploaded as a ZIP |
 | Dependency installation fails | Python 3.12, requirements.txt and the actual cloud build log |
 | No earlier accepted plan | First use requires Not applicable; rejected plans do not count as accepted history |
 | This simulated day already has a record | Use the next date, or exact submitted input to recover a pending draft |
